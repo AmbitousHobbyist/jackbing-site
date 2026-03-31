@@ -391,18 +391,19 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
-    /* ========== MOTTO — TEXT SCRAMBLE ========== */
+    /* ========== MOTTO — SCROLL FLOAT ========== */
     .motto-section {
-      padding: clamp(5rem, 12vh, 9rem) 0;
+      padding: clamp(6rem, 14vh, 10rem) 0;
       text-align: center;
       border-bottom: 1px solid var(--border);
+      overflow: hidden;
     }
 
     .motto-text {
       font-size: clamp(3.5rem, 9vw, 9rem);
       font-weight: 900;
       letter-spacing: -0.05em;
-      line-height: 0.9;
+      line-height: 0.95;
       -webkit-text-stroke: 2px var(--text-primary);
       paint-order: stroke fill;
       cursor: default;
@@ -413,15 +414,20 @@
       -webkit-text-stroke-color: var(--accent);
     }
 
-    /* Each letter in scramble */
-    .scramble-letter {
+    /* Scroll Float words */
+    .scroll-float-word {
       display: inline-block;
-      transition: transform 0.15s var(--ease-out-expo);
+      opacity: 0.15;
+      filter: blur(6px);
+      transform: translateY(20px);
+      transition: opacity 0.1s, filter 0.1s, transform 0.1s;
+      will-change: opacity, filter, transform;
     }
 
-    .scramble-letter.scrambling {
-      color: var(--accent);
-      -webkit-text-stroke-color: var(--accent);
+    .scroll-float-word.in-view {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
     }
 
     /* ========== MARQUEE — SCROLL VELOCITY ========== */
@@ -923,11 +929,11 @@
     }
 
     .streak-text {
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-size: clamp(1.75rem, 3.5vw, 3rem);
       font-weight: 900;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      -webkit-text-stroke: 1px var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      -webkit-text-stroke: 1.5px var(--text-primary);
       paint-order: stroke fill;
     }
 
@@ -941,17 +947,17 @@
       background: var(--text-primary);
       color: #fff;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-size: clamp(3rem, 6vw, 5rem);
       font-weight: 900;
-      width: clamp(2.5rem, 4vw, 3.5rem);
-      height: clamp(3.25rem, 5.5vw, 4.5rem);
+      width: clamp(3rem, 5vw, 4.25rem);
+      height: clamp(4rem, 7vw, 5.5rem);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
+      border-radius: 10px;
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
     }
 
     .streak-digit::after {
@@ -997,13 +1003,15 @@
     }
 
     .rotating-titles-text {
-      font-size: clamp(1.75rem, 3.5vw, 3rem);
+      font-size: clamp(2rem, 4.5vw, 4rem);
       font-weight: 900;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.04em;
       line-height: 1.1;
       height: 1.2em;
       overflow: hidden;
       position: relative;
+      -webkit-text-stroke: 1px var(--text-primary);
+      paint-order: stroke fill;
     }
 
     .rotating-titles-text span {
@@ -1120,29 +1128,29 @@
 
     .obsession-card {
       background: var(--bg-card);
-      padding: 1.5rem;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
       text-align: center;
-      transition: background 0.4s var(--ease-out-expo);
+      transition: background 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
     }
 
-    .obsession-card:hover { background: var(--bg-card-hover); }
+    .obsession-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
 
     .obsession-icon {
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
       display: block;
     }
 
     .obsession-name {
-      font-size: 0.9375rem;
-      font-weight: 800;
-      margin-bottom: 0.25rem;
+      font-size: 1.0625rem;
+      font-weight: 900;
+      margin-bottom: 0.375rem;
     }
 
     .obsession-detail {
       font-size: 0.75rem;
       color: var(--text-muted);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     /* ========== 5. "NOW PLAYING" STATUS ========== */
@@ -1438,12 +1446,26 @@
     </div>
   </div>
 
-  <!-- MOTTO — TEXT SCRAMBLE -->
+  <!-- MOTTO — SCROLL FLOAT -->
   <section class="motto-section">
     <div class="container">
-      <div class="motto-text reveal" id="mottoText" data-text="Here for a good time.">Here for a good time<span class="accent">.</span></div>
+      <div class="motto-text" id="mottoText"><span class="scroll-float-word">Here</span> <span class="scroll-float-word">for</span> <span class="scroll-float-word">a</span> <span class="scroll-float-word">good</span> <span class="scroll-float-word">time</span><span class="scroll-float-word accent">.</span></div>
     </div>
   </section>
+
+  <!-- NOW PLAYING STATUS -->
+  <div class="now-playing">
+    <div class="container now-playing-inner">
+      <div class="now-playing-bars">
+        <div class="now-playing-bar"></div>
+        <div class="now-playing-bar"></div>
+        <div class="now-playing-bar"></div>
+        <div class="now-playing-bar"></div>
+      </div>
+      <div class="now-playing-label">Currently Into</div>
+      <div class="now-playing-text" id="nowPlayingText">Restoring the 300ZX</div>
+    </div>
+  </div>
 
   <!-- MARQUEE — SCROLL VELOCITY -->
   <div class="marquee-section">
@@ -1519,6 +1541,23 @@
     </div>
   </section>
 
+  <!-- ROTATING TITLES -->
+  <section class="rotating-titles container">
+    <div class="rotating-titles-label reveal">Things people call me</div>
+    <div class="rotating-titles-text reveal reveal-delay-1" id="rotatingTitles">
+      <span class="active">Content Creator</span>
+      <span>The Geography Guy</span>
+      <span>Cafe Owner</span>
+      <span>Everything Enthusiast</span>
+      <span>Chronically Online</span>
+      <span>Professional Button Presser</span>
+      <span>Wildflower Founder</span>
+      <span>Video Guy</span>
+      <span>YouTube Addict</span>
+      <span>Mate</span>
+    </div>
+  </section>
+
   <!-- ABOUT -->
   <section class="about container" id="about">
     <div class="about-grid">
@@ -1561,6 +1600,13 @@
     </div>
   </section>
 
+  <!-- PULLQUOTE — BLUR REVEAL -->
+  <section class="pullquote container">
+    <div class="pullquote-text" id="pullquote">
+      "Failure is not an option, it's a necessity<span class="accent">."</span>
+    </div>
+  </section>
+
   <!-- UPLOAD STREAK COUNTER -->
   <section class="streak-section container">
     <div class="streak-inner reveal">
@@ -1571,35 +1617,6 @@
         <div class="streak-counter" id="streakCounter"></div>
         <div class="streak-label">And counting</div>
       </div>
-    </div>
-  </section>
-
-  <!-- NOW PLAYING STATUS -->
-  <div class="now-playing">
-    <div class="container now-playing-inner">
-      <div class="now-playing-bars">
-        <div class="now-playing-bar"></div>
-        <div class="now-playing-bar"></div>
-        <div class="now-playing-bar"></div>
-        <div class="now-playing-bar"></div>
-      </div>
-      <div class="now-playing-label">Currently Into</div>
-      <div class="now-playing-text" id="nowPlayingText">Restoring the 300ZX</div>
-    </div>
-  </div>
-
-  <!-- ROTATING TITLES -->
-  <section class="rotating-titles container">
-    <div class="rotating-titles-label reveal">Things people call me</div>
-    <div class="rotating-titles-text reveal reveal-delay-1" id="rotatingTitles">
-      <span class="active">Content Creator</span>
-      <span>That Geography Guy</span>
-      <span>Cafe Owner</span>
-      <span>300ZX Enthusiast</span>
-      <span>Professional Button Presser</span>
-      <span>Wildflower Founder</span>
-      <span>Your New Favourite YouTuber</span>
-      <span>Chronically Online</span>
     </div>
   </section>
 
@@ -1627,13 +1644,6 @@
         <div class="obsession-name">Whatever's New</div>
         <div class="obsession-detail">Always something</div>
       </div>
-    </div>
-  </section>
-
-  <!-- PULLQUOTE — BLUR REVEAL -->
-  <section class="pullquote container">
-    <div class="pullquote-text" id="pullquote">
-      "Failure is not an option, it's a necessity<span class="accent">."</span>
     </div>
   </section>
 
@@ -1792,52 +1802,39 @@
     })();
 
     /* ============================================
-       2. MOTTO — TEXT SCRAMBLE ON SCROLL
+       2. MOTTO — SCROLL FLOAT
+       Each word fades/blurs in based on scroll
+       position relative to the section.
        ============================================ */
-    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&';
-    const mottoEl = document.getElementById('mottoText');
-    const mottoOriginal = 'Here for a good time.';
-    let mottoScrambled = false;
+    (function initScrollFloat() {
+      const section = document.querySelector('.motto-section');
+      const words = document.querySelectorAll('.scroll-float-word');
+      if (!section || !words.length) return;
 
-    function scrambleText(el, finalText, duration) {
-      const len = finalText.length;
-      const startTime = performance.now();
-      let frame;
+      function onScroll() {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top;
+        const sectionH = rect.height;
+        const winH = window.innerHeight;
 
-      function tick(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        let result = '';
+        // Progress: 0 when section enters bottom of viewport, 1 when it's centered
+        const progress = Math.max(0, Math.min(1, (winH - sectionTop) / (winH + sectionH * 0.3)));
 
-        for (let i = 0; i < len; i++) {
-          if (finalText[i] === ' ') { result += ' '; continue; }
-          const charProgress = Math.max(0, Math.min(1, (progress * len - i + 4) / 4));
-          if (charProgress >= 1) {
-            result += finalText[i];
-          } else {
-            result += CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
-        }
-        el.textContent = result;
-        if (progress < 1) frame = requestAnimationFrame(tick);
+        words.forEach((word, i) => {
+          const wordProgress = Math.max(0, Math.min(1, (progress * (words.length + 2) - i) / 2));
+          const opacity = 0.15 + wordProgress * 0.85;
+          const blur = (1 - wordProgress) * 6;
+          const y = (1 - wordProgress) * 20;
+
+          word.style.opacity = opacity;
+          word.style.filter = `blur(${blur}px)`;
+          word.style.transform = `translateY(${y}px)`;
+        });
       }
-      frame = requestAnimationFrame(tick);
-    }
 
-    const mottoObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !mottoScrambled) {
-          mottoScrambled = true;
-          scrambleText(mottoEl, mottoOriginal, 1200);
-        }
-      });
-    }, { threshold: 0.5 });
-    mottoObserver.observe(mottoEl);
-
-    // Re-scramble on hover
-    mottoEl.addEventListener('mouseenter', () => {
-      scrambleText(mottoEl, mottoOriginal, 800);
-    });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // Initial check
+    })();
 
     /* ============================================
        3. PULLQUOTE — BLUR REVEAL PER WORD
