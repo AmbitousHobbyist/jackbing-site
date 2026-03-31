@@ -989,7 +989,8 @@
     /* ========== 2. ROTATING TITLES ========== */
     .rotating-titles {
       padding: clamp(3rem, 6vh, 5rem) 0;
-      border-top: 1px solid var(--border);
+      background: var(--accent);
+      color: #fff;
       overflow: hidden;
     }
 
@@ -998,7 +999,7 @@
       font-weight: 800;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.5);
       margin-bottom: 1rem;
     }
 
@@ -1010,7 +1011,8 @@
       height: 1.2em;
       overflow: hidden;
       position: relative;
-      -webkit-text-stroke: 1px var(--text-primary);
+      color: #fff;
+      -webkit-text-stroke: 1px #fff;
       paint-order: stroke fill;
     }
 
@@ -1542,7 +1544,8 @@
   </section>
 
   <!-- ROTATING TITLES -->
-  <section class="rotating-titles container">
+  <section class="rotating-titles">
+    <div class="container">
     <div class="rotating-titles-label reveal">Things people call me</div>
     <div class="rotating-titles-text reveal reveal-delay-1" id="rotatingTitles">
       <span class="active">Content Creator</span>
@@ -1555,6 +1558,7 @@
       <span>Video Guy</span>
       <span>YouTube Addict</span>
       <span>Mate</span>
+    </div>
     </div>
   </section>
 
@@ -2231,7 +2235,6 @@
         'The 300ZX has been in the garage longer than some of Jack\'s subscribers have been alive.',
         'Wildflower started as a dream and a whiteboard sketch.',
         'Jack\'s most-watched Short hit 2.8M views. Not bad for a bloke from NSW.',
-        'This website was built entirely with Claude Code. No cap.',
         'The first YouTube video was filmed on a phone propped up against a cereal box.',
         'Jack can name every country on a blank map. Go on, test him.',
         'There are more videos on the channel than days in two years.'
