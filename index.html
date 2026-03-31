@@ -1433,11 +1433,11 @@
           <div class="live-banner-label">Subscribers</div>
         </div>
         <div class="live-banner-stat reveal reveal-delay-1">
-          <div class="live-banner-number"><span class="count-up" data-target="4200000" data-suffix="" data-format="short">0</span></div>
+          <div class="live-banner-number"><span class="count-up" data-target="9307912" data-suffix="" data-format="short">0</span></div>
           <div class="live-banner-label">Total Views</div>
         </div>
         <div class="live-banner-stat reveal reveal-delay-2">
-          <div class="live-banner-number"><span class="count-up" data-target="740" data-suffix="+">0</span></div>
+          <div class="live-banner-number"><span class="count-up" data-target="1239" data-suffix="+">0</span></div>
           <div class="live-banner-label">Videos Published</div>
         </div>
         <div class="live-banner-stat reveal reveal-delay-3">
@@ -1528,7 +1528,7 @@
         <div class="stat-card-label">Combined views per video across YouTube and TikTok.</div>
       </div>
       <div class="stat-card reveal reveal-delay-1" data-spotlight>
-        <div class="stat-card-number"><span class="count-up" data-target="740" data-suffix="+">0</span></div>
+        <div class="stat-card-number"><span class="count-up" data-target="1239" data-suffix="+">0</span></div>
         <div class="stat-card-label">Videos published and counting. Consistency is the whole game.</div>
       </div>
       <div class="stat-card reveal reveal-delay-2" data-spotlight>
@@ -1579,7 +1579,7 @@
             I want to encourage people to always follow their dreams and not be afraid to dive in and learn something new. That's the whole point of the channel — give it a go, have fun, figure it out.
           </p>
           <p class="reveal reveal-delay-5">
-            The numbers back it up too. <strong>13,300+ subscribers</strong>, <strong>740+ videos</strong>, daily uploads, and <strong>3+ years of brand partnerships</strong> with companies like TeuTeuf, Fanatee, and Trainwreck Labs. Brands I work with get authentic integration in front of an audience that actually pays attention — not vanity metrics.
+            The numbers back it up too. <strong>13,300+ subscribers</strong>, <strong>1,200+ videos</strong>, daily uploads, and <strong>3+ years of brand partnerships</strong> with companies like TeuTeuf, Fanatee, and Trainwreck Labs. Brands I work with get authentic integration in front of an audience that actually pays attention — not vanity metrics.
           </p>
         </div>
       </div>
@@ -1731,9 +1731,9 @@
     /* ============================================
        YOUTUBE DATA API v3 — LIVE STATS
        ============================================ */
-    const YT_API_KEY = '';
-    const YT_CHANNEL_ID = 'UCfMJ2MBqSTmLRJqAMcJMfOg';
-    const FALLBACK = { subscribers: 13300, totalViews: 4200000, videoCount: 740 };
+    const YT_API_KEY = 'AIzaSyD4HPsJNWAw5BmY8KAo4_Um-97tySvj3l4';
+    const YT_CHANNEL_ID = 'UCf8caU6SJh_CYq_YrkQaF6w';
+    const FALLBACK = { subscribers: 13300, totalViews: 9307912, videoCount: 1239 };
     let liveData = { ...FALLBACK };
 
     async function fetchYouTubeStats() {
@@ -1779,7 +1779,7 @@
         let target = parseInt(el.dataset.target, 10);
         if (target === 13300) target = liveData.subscribers;
         if (target === 4200000) target = liveData.totalViews;
-        if (target === 740) target = liveData.videoCount;
+        if (target === 1239) target = liveData.videoCount;
         el.dataset.target = target;
       });
     }
@@ -2304,7 +2304,7 @@
               let newTarget = target;
               if (Math.abs(target - 13300) < 5000) newTarget = liveData.subscribers;
               if (target > 100000) newTarget = liveData.totalViews;
-              if (Math.abs(target - 740) < 200) newTarget = liveData.videoCount;
+              if (Math.abs(target - 1239) < 300) newTarget = liveData.videoCount;
               if (newTarget !== target) {
                 el.dataset.target = newTarget;
                 const suffix = el.dataset.suffix || '';
