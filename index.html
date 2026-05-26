@@ -39,7 +39,7 @@
 
       /* ===== LAYOUT ===== */
       --container-max: 1400px;
-      --container-px: clamp(1.25rem, 4vw, 4rem);
+      --container-px: clamp(1.5rem, 5vw, 5rem);
       --section-py: clamp(4rem, 9vh, 7rem);
       --section-py-sm: clamp(2.5rem, 5vh, 4rem);
       --card-px: clamp(1.75rem, 3vw, 2.5rem);
@@ -497,7 +497,8 @@
 
     /* ========== STATS — SPOTLIGHT CARD ========== */
     .stats {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
     }
 
     .stats-grid {
@@ -570,7 +571,8 @@
 
     /* ========== ABOUT ========== */
     .about {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
 
@@ -659,7 +661,8 @@
 
     /* ========== PULLQUOTE — BLUR REVEAL ========== */
     .pullquote {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
 
@@ -695,7 +698,8 @@
 
     /* ========== PLATFORMS (inline icons) ========== */
     .platforms {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
 
@@ -735,7 +739,8 @@
 
     /* ========== CONTACT — TILT CARD ========== */
     .contact {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
     }
 
     .contact-inner {
@@ -1188,53 +1193,85 @@
     }
 
     /* ========== 2. ROTATING TITLES ========== */
-    .rotating-titles {
-      padding: var(--section-py-sm) 0;
-      background: var(--accent);
+    /* ========== BRAND MARQUEE ========== */
+    .brand-marquee {
+      background: var(--text-primary);
       color: #fff;
+      padding-top: var(--section-py-sm);
+      padding-bottom: var(--section-py-sm);
       overflow: hidden;
     }
 
-    .rotating-titles-label {
+    .brand-marquee-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
       font-size: var(--text-xs);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.55);
-      margin-bottom: var(--space-4);
+      margin-bottom: var(--space-7);
     }
 
-    .rotating-titles-text {
-      font-size: var(--text-3xl);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--tracking-display);
-      line-height: 1.1;
-      height: 1.2em;
+    .brand-marquee-label::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .brand-marquee-track-wrap {
+      width: 100%;
       overflow: hidden;
-      position: relative;
-      color: #fff;
-      -webkit-text-stroke: 1px #fff;
-      paint-order: stroke fill;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+              mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
     }
 
-    .rotating-titles-text span {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transform: translateY(100%);
-      transition: all 0.5s var(--ease-out-expo);
+    .brand-marquee-track {
+      display: flex;
+      align-items: center;
+      gap: clamp(3rem, 8vw, 6rem);
+      width: max-content;
+      animation: brandScroll 32s linear infinite;
     }
 
-    .rotating-titles-text span.active {
+    .brand-marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes brandScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .brand-logo {
+      font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--tracking-tight);
+      color: rgba(255, 255, 255, 0.85);
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.3s var(--ease-out-expo), opacity 0.3s var(--ease-out-expo);
+      opacity: 0.7;
+    }
+
+    .brand-logo:hover {
       opacity: 1;
-      transform: translateY(0);
+      color: #fff;
     }
 
-    .rotating-titles-text span.exit {
-      opacity: 0;
-      transform: translateY(-100%);
+    /* Per-brand wordmark treatments so they read as distinct logos */
+    .brand-logo--mono {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.02em;
+      font-size: clamp(1.25rem, 2.8vw, 2.25rem);
+    }
+
+    .brand-logo--script {
+      font-style: italic;
+      letter-spacing: var(--tracking-display);
     }
 
     /* ========== 3. EASTER EGG ========== */
@@ -1319,7 +1356,8 @@
 
     /* ========== 4. CURRENT OBSESSIONS ========== */
     .current-obsession {
-      padding: var(--section-py) 0;
+      padding-top: var(--section-py);
+      padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
 
@@ -1723,21 +1761,26 @@
     </div>
   </section>
 
-  <!-- ROTATING TITLES (red band — visual break) -->
-  <section class="rotating-titles">
+  <!-- BRAND MARQUEE — social proof strip -->
+  <section class="brand-marquee">
     <div class="container">
-      <div class="rotating-titles-label reveal">Things people call me</div>
-      <div class="rotating-titles-text reveal reveal-delay-1" id="rotatingTitles">
-        <span class="active">Content Creator</span>
-        <span>The Geography Guy</span>
-        <span>Cafe Owner</span>
-        <span>Everything Enthusiast</span>
-        <span>Chronically Online</span>
-        <span>Professional Button Presser</span>
-        <span>Wildflower Founder</span>
-        <span>Video Guy</span>
-        <span>YouTube Addict</span>
-        <span>Mate</span>
+      <div class="brand-marquee-label reveal">Brands I've worked with</div>
+    </div>
+    <div class="brand-marquee-track-wrap">
+      <div class="brand-marquee-track">
+        <span class="brand-logo">TeuTeuf</span>
+        <span class="brand-logo brand-logo--mono">FANATEE</span>
+        <span class="brand-logo brand-logo--script">Trainwreck Labs</span>
+        <span class="brand-logo brand-logo--mono">GAMEWORLDLE</span>
+        <span class="brand-logo">Worldle</span>
+        <span class="brand-logo brand-logo--mono">CODYCROSS</span>
+        <!-- Duplicate set for seamless loop -->
+        <span class="brand-logo" aria-hidden="true">TeuTeuf</span>
+        <span class="brand-logo brand-logo--mono" aria-hidden="true">FANATEE</span>
+        <span class="brand-logo brand-logo--script" aria-hidden="true">Trainwreck Labs</span>
+        <span class="brand-logo brand-logo--mono" aria-hidden="true">GAMEWORLDLE</span>
+        <span class="brand-logo" aria-hidden="true">Worldle</span>
+        <span class="brand-logo brand-logo--mono" aria-hidden="true">CODYCROSS</span>
       </div>
     </div>
   </section>
@@ -2351,24 +2394,6 @@
         div.textContent = d;
         container.appendChild(div);
       });
-    })();
-
-    /* ============================================
-       10. ROTATING TITLES
-       ============================================ */
-    (function initRotatingTitles() {
-      const container = document.getElementById('rotatingTitles');
-      if (!container) return;
-      const items = container.querySelectorAll('span');
-      let current = 0;
-
-      setInterval(() => {
-        items[current].classList.remove('active');
-        items[current].classList.add('exit');
-        setTimeout(() => items[current === 0 ? items.length - 1 : current - 1].classList.remove('exit'), 500);
-        current = (current + 1) % items.length;
-        items[current].classList.add('active');
-      }, 2500);
     })();
 
     /* ============================================
