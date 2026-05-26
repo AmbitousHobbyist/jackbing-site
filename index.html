@@ -1247,32 +1247,18 @@
     }
 
     .brand-logo {
-      font-size: clamp(1.5rem, 3.5vw, 2.75rem);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--tracking-tight);
-      color: rgba(255, 255, 255, 0.85);
-      white-space: nowrap;
       flex-shrink: 0;
-      transition: color 0.3s var(--ease-out-expo), opacity 0.3s var(--ease-out-expo);
-      opacity: 0.7;
+      height: clamp(2rem, 4vw, 3rem);
+      width: auto;
+      opacity: 0.75;
+      filter: brightness(0) invert(1);
+      transition: opacity 0.3s var(--ease-out-expo);
     }
 
-    .brand-logo:hover {
-      opacity: 1;
-      color: #fff;
-    }
+    .brand-logo:hover { opacity: 1; }
 
-    /* Per-brand wordmark treatments so they read as distinct logos */
-    .brand-logo--mono {
-      font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.02em;
-      font-size: clamp(1.25rem, 2.8vw, 2.25rem);
-    }
-
-    .brand-logo--script {
-      font-style: italic;
-      letter-spacing: var(--tracking-display);
-    }
+    /* Supercheap's official white SVG is already white — skip the invert */
+    .brand-logo--prewhite { filter: none; }
 
     /* ========== 3. EASTER EGG ========== */
     .easter-egg-trigger {
@@ -1768,23 +1754,21 @@
     </div>
     <div class="brand-marquee-track-wrap">
       <div class="brand-marquee-track">
-        <span class="brand-logo brand-logo--script">Red Bull</span>
-        <span class="brand-logo brand-logo--mono">XBOX</span>
-        <span class="brand-logo brand-logo--script">Forza</span>
-        <span class="brand-logo brand-logo--mono">SUPERCHEAP AUTO</span>
-        <span class="brand-logo brand-logo--mono">RAZER</span>
-        <span class="brand-logo">TeuTeuf</span>
-        <span class="brand-logo brand-logo--mono">FANATEE</span>
-        <span class="brand-logo">Trainwreck Labs</span>
+        <img class="brand-logo" src="logos/redbull.svg" alt="Red Bull">
+        <img class="brand-logo" src="logos/xbox.svg" alt="Xbox">
+        <img class="brand-logo" src="logos/forza.svg" alt="Forza">
+        <img class="brand-logo brand-logo--prewhite" src="logos/supercheap.svg" alt="Supercheap Auto">
+        <img class="brand-logo" src="logos/razer.svg" alt="Razer">
+        <img class="brand-logo" src="logos/fanatee.svg" alt="Fanatee">
+        <img class="brand-logo" src="logos/trainwrecklabs.png" alt="Trainwreck Labs">
         <!-- Duplicate set for seamless loop -->
-        <span class="brand-logo brand-logo--script" aria-hidden="true">Red Bull</span>
-        <span class="brand-logo brand-logo--mono" aria-hidden="true">XBOX</span>
-        <span class="brand-logo brand-logo--script" aria-hidden="true">Forza</span>
-        <span class="brand-logo brand-logo--mono" aria-hidden="true">SUPERCHEAP AUTO</span>
-        <span class="brand-logo brand-logo--mono" aria-hidden="true">RAZER</span>
-        <span class="brand-logo" aria-hidden="true">TeuTeuf</span>
-        <span class="brand-logo brand-logo--mono" aria-hidden="true">FANATEE</span>
-        <span class="brand-logo" aria-hidden="true">Trainwreck Labs</span>
+        <img class="brand-logo" src="logos/redbull.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="logos/xbox.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="logos/forza.svg" alt="" aria-hidden="true">
+        <img class="brand-logo brand-logo--prewhite" src="logos/supercheap.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="logos/razer.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="logos/fanatee.svg" alt="" aria-hidden="true">
+        <img class="brand-logo" src="logos/trainwrecklabs.png" alt="" aria-hidden="true">
       </div>
     </div>
   </section>
