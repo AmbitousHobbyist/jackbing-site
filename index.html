@@ -828,6 +828,23 @@
       margin-bottom: var(--space-4);
     }
 
+    .contact-mediakit-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
+      margin-left: var(--space-5);
+      font-size: var(--text-sm);
+      font-weight: var(--fw-bold);
+      color: var(--text-muted);
+      transition: color 0.3s var(--ease-out-expo);
+    }
+    .contact-mediakit-link strong {
+      color: var(--accent);
+      font-weight: var(--fw-black);
+    }
+    .contact-mediakit-link:hover { color: var(--text-primary); }
+
     .partner-list { display: flex; flex-direction: column; gap: var(--space-3); }
     .partner-name { font-size: var(--text-base); font-weight: var(--fw-bold); color: var(--text-secondary); }
 
@@ -1601,6 +1618,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#platforms">Platforms</a></li>
+        <li><a href="/media-kit">Media Kit</a></li>
         <li><a href="#contact">Say G'day</a></li>
       </ul>
       <div class="nav-cta-wrap">
@@ -1615,6 +1633,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#about" onclick="closeMobile()">About</a>
     <a href="#platforms" onclick="closeMobile()">Platforms</a>
+    <a href="/media-kit" onclick="closeMobile()">Media Kit</a>
     <a href="#contact" onclick="closeMobile()">Say G'day</a>
     <a href="mailto:jack@jackbing.com" onclick="closeMobile()">Email</a>
     <a href="https://youtube.com/@jack_bing" target="_blank" onclick="closeMobile()">YouTube</a>
@@ -1960,14 +1979,18 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
             </span>
           </a>
+          <a href="/media-kit" class="contact-mediakit-link">
+            Brand or agency? <strong>View the media kit →</strong>
+          </a>
         </div>
         <div class="contact-partners">
           <div class="contact-partners-label">People I've Worked With</div>
           <div class="partner-list">
-            <div class="partner-name">TeuTeuf</div>
-            <div class="partner-name">Fanatee</div>
-            <div class="partner-name">Trainwreck Labs</div>
-            <div class="partner-name">+ others</div>
+            <div class="partner-name">Red Bull</div>
+            <div class="partner-name">Xbox</div>
+            <div class="partner-name">Forza</div>
+            <div class="partner-name">Razer</div>
+            <div class="partner-name">+ more</div>
           </div>
         </div>
       </div>
