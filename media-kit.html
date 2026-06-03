@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Media Kit — Jack Bing</title>
-  <meta name="description" content="Jack Bing Media Kit — 10.3M+ views, 85K monthly viewers, 65%+ retention. Brand partnerships, audience demographics, services, and process.">
+  <title>Media Kit, Jack Bing</title>
+  <meta name="description" content="Jack Bing Media Kit. 10.3M+ views, 85K monthly viewers, 65%+ retention. Brand partnerships, audience demographics, services, and process.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -26,32 +26,32 @@
       --border: rgba(0, 0, 0, 0.07);
       --border-hover: rgba(0, 0, 0, 0.14);
 
-      /* SPACING */
+      /* SPACING (8pt scale) */
       --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
       --space-5: 1.5rem; --space-6: 2rem; --space-7: 3rem; --space-8: 4rem; --space-9: 6rem;
 
-      /* LAYOUT */
-      --container-max: 1400px;
-      --container-px: clamp(1.5rem, 5vw, 5rem);
-      --section-py: clamp(4rem, 9vh, 7rem);
-      --section-py-sm: clamp(2.5rem, 5vh, 4rem);
-      --card-px: clamp(1.75rem, 3vw, 2.5rem);
-      --card-py: clamp(1.75rem, 3vw, 2.5rem);
+      /* LAYOUT (tighter than main site, resume feel) */
+      --container-max: 1200px;
+      --container-px: clamp(1.5rem, 5vw, 4rem);
+      --section-py: clamp(2.5rem, 6vh, 4.5rem);
+      --section-py-sm: clamp(1.5rem, 4vh, 2.5rem);
+      --card-px: clamp(1.25rem, 2.5vw, 2rem);
+      --card-py: clamp(1.25rem, 2.5vw, 1.75rem);
 
-      /* TYPE */
+      /* TYPE (scaled down for media kit, resume feel) */
       --text-xs: 0.6875rem;
       --text-sm: 0.8125rem;
       --text-base: 0.9375rem;
       --text-md: 1rem;
-      --text-lg: clamp(1.0625rem, 1.4vw, 1.25rem);
-      --text-xl: clamp(1.5rem, 2.5vw, 2rem);
-      --text-2xl: clamp(2rem, 3.5vw, 2.75rem);
-      --text-3xl: clamp(2.25rem, 4.5vw, 3.5rem);
-      --text-stat: clamp(2.5rem, 5vw, 4.5rem);
-      --text-display: clamp(3.5rem, 9vw, 8.5rem);
+      --text-lg: clamp(1rem, 1.3vw, 1.125rem);
+      --text-xl: clamp(1.125rem, 1.75vw, 1.375rem);
+      --text-2xl: clamp(1.25rem, 2vw, 1.625rem);
+      --text-3xl: clamp(1.5rem, 2.5vw, 2rem);
+      --text-stat: clamp(1.625rem, 2.75vw, 2.25rem);   /* half of main-site stat size */
+      --text-display: clamp(1.75rem, 3vw, 2.5rem);
 
       --fw-regular: 400; --fw-bold: 700; --fw-black: 900;
-      --tracking-display: -0.045em;
+      --tracking-display: -0.035em;
       --tracking-tight: -0.02em;
       --tracking-wide: 0.1em;
       --tracking-wider: 0.18em;
@@ -72,7 +72,7 @@
       background: var(--bg);
       color: var(--text-primary);
       font-size: var(--text-md);
-      line-height: 1.6;
+      line-height: 1.55;
       overflow-x: hidden;
     }
 
@@ -101,7 +101,7 @@
     /* ========== NAV ========== */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 40;
-      padding: var(--space-5) 0;
+      padding: var(--space-4) 0;
       background: rgba(245, 243, 240, 0.85);
       backdrop-filter: blur(20px) saturate(1.3);
       -webkit-backdrop-filter: blur(20px) saturate(1.3);
@@ -129,7 +129,7 @@
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      padding: var(--space-3) var(--space-5);
+      padding: var(--space-2) var(--space-5);
       border-radius: var(--radius-pill);
       background: var(--accent);
       color: #fff;
@@ -168,18 +168,40 @@
     }
     .mobile-menu a:hover { color: var(--accent); }
 
+    /* ========== SECTION LABEL ========== */
+    .mk-section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-xs);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-5);
+    }
+    .mk-section-label::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    }
+
+    .mk-section-heading {
+      font-size: var(--text-2xl);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--tracking-display);
+      line-height: 1.1;
+      margin-bottom: var(--space-6);
+    }
+    .mk-section-heading .accent { color: var(--accent); }
+
     /* ========== HERO ========== */
     .mk-hero {
-      min-height: 100dvh;
-      display: grid;
-      align-items: center;
-      padding-top: var(--space-9);
-      padding-bottom: var(--section-py-sm);
+      padding-top: clamp(5rem, 12vh, 7rem);
+      padding-bottom: var(--section-py);
     }
     .mk-hero-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: var(--space-8);
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--space-7);
       align-items: center;
     }
     .mk-hero-eyebrow {
@@ -194,26 +216,40 @@
       margin-bottom: var(--space-5);
     }
     .mk-hero-eyebrow::before {
-      content: ''; width: 2rem; height: 2px; background: var(--accent);
+      content: ''; width: 1.5rem; height: 2px; background: var(--accent);
     }
 
-    /* ===== SLOT MACHINE ROTATOR ===== */
-    .mk-hero-title {
+    .mk-hero-name {
       font-size: var(--text-display);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-display);
-      line-height: 0.95;
-      margin-bottom: var(--space-6);
-      -webkit-text-stroke: 2px var(--text-primary);
-      paint-order: stroke fill;
+      line-height: 1;
+      margin-bottom: var(--space-5);
     }
+    .mk-hero-name .accent { color: var(--accent); }
+
+    /* Tagline as one inline paragraph with rotating verb */
+    .mk-tagline {
+      font-size: var(--text-xl);
+      font-weight: var(--fw-regular);
+      color: var(--text-secondary);
+      line-height: 1.45;
+      max-width: 38ch;
+      margin-bottom: var(--space-5);
+    }
+    .mk-tagline .strong-end {
+      color: var(--text-primary);
+      font-weight: var(--fw-black);
+    }
+
+    /* SLOT MACHINE (inline, fixed) */
     .slot-rotator {
       display: inline-block;
-      vertical-align: bottom;
+      vertical-align: baseline;
       height: 1em;
+      line-height: 1;
       overflow: hidden;
       position: relative;
-      line-height: 1;
     }
     .slot-stack {
       display: flex;
@@ -226,148 +262,88 @@
       line-height: 1;
       white-space: nowrap;
       color: var(--accent);
-      -webkit-text-stroke-color: var(--accent);
+      font-weight: inherit;
     }
     @keyframes slotCycle {
       0%, 27%   { transform: translateY(0); }
-      33%, 60%  { transform: translateY(-100%); }
-      66%, 93%  { transform: translateY(-200%); }
-      100%      { transform: translateY(-300%); }
+      33%, 60%  { transform: translateY(-1em); }
+      66%, 93%  { transform: translateY(-2em); }
+      100%      { transform: translateY(-3em); }
     }
     @media (prefers-reduced-motion: reduce) {
       .slot-stack { animation: none; }
-    }
-
-    .mk-hero-sub {
-      font-size: var(--text-lg);
-      color: var(--text-secondary);
-      max-width: 52ch;
-      line-height: 1.55;
-      margin-bottom: var(--space-7);
-    }
-    .mk-hero-sub strong {
-      color: var(--text-primary);
-      font-weight: var(--fw-black);
-    }
-
-    .mk-hero-ctas {
-      display: flex;
-      gap: var(--space-4);
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .mk-btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-base);
-      font-weight: var(--fw-black);
-      padding: var(--space-4) var(--space-6);
-      border-radius: var(--radius-pill);
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.4s var(--ease-out-expo);
-      font-family: inherit;
-    }
-    .mk-btn-primary:hover { transform: translateY(-1px); }
-    .mk-btn-primary:active { transform: scale(0.97); }
-    .mk-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-base);
-      font-weight: var(--fw-black);
-      padding: var(--space-4) var(--space-6);
-      border-radius: var(--radius-pill);
-      background: transparent;
-      color: var(--text-primary);
-      border: 2px solid var(--text-primary);
-      cursor: pointer;
-      transition: all 0.4s var(--ease-out-expo);
-      font-family: inherit;
-    }
-    .mk-btn-secondary:hover {
-      background: var(--text-primary);
-      color: #fff;
-    }
-    .mk-btn-secondary:active { transform: scale(0.97); }
-    .mk-btn-icon {
-      display: flex; align-items: center; justify-content: center;
-      width: 1.5rem; height: 1.5rem;
     }
 
     .mk-hero-meta {
       display: inline-flex;
       align-items: center;
       gap: var(--space-2);
-      margin-top: var(--space-5);
+      padding: var(--space-2) var(--space-4);
+      background: var(--bg-elevated);
+      border-radius: var(--radius-pill);
       font-size: var(--text-xs);
       font-weight: var(--fw-bold);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
     .mk-hero-meta::before {
       content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: #22c55e; margin-right: var(--space-1);
+      background: #22c55e;
     }
 
-    /* ===== HERO PHOTO ===== */
+    /* HERO PHOTO (smaller, compact) */
     .mk-hero-photo {
       position: relative;
-      aspect-ratio: 3 / 4;
-      border-radius: var(--radius-lg);
+      aspect-ratio: 4 / 5;
+      max-width: 280px;
+      margin-left: auto;
+      border-radius: var(--radius-md);
       overflow: hidden;
       background: var(--bg-elevated);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 28px rgba(0,0,0,0.08);
     }
-    .mk-hero-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+    .mk-hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .mk-hero-photo-placeholder {
       position: absolute; inset: 0;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: var(--space-3);
+      gap: var(--space-2);
       background: linear-gradient(135deg, var(--bg-elevated), var(--bg-card));
       color: var(--text-muted);
       text-align: center;
-      padding: var(--space-6);
+      padding: var(--space-5);
     }
     .mk-hero-photo-placeholder-mark {
-      font-size: clamp(3rem, 6vw, 5rem);
+      font-size: clamp(2rem, 4vw, 3rem);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-display);
       color: var(--text-primary);
       opacity: 0.15;
     }
     .mk-hero-photo-placeholder-text {
-      font-size: var(--text-xs);
+      font-size: 0.625rem;
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
     }
 
-    /* ========== STATS STRIP ========== */
+    /* ========== STATS STRIP (transparent, dark) ========== */
     .mk-stats {
-      background: var(--text-primary);
-      color: #fff;
-      padding: var(--section-py-sm) 0;
+      padding-top: var(--section-py-sm);
+      padding-bottom: var(--section-py-sm);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
     .mk-stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(255,255,255,0.08);
+      gap: var(--space-5);
     }
     .mk-stat {
-      background: var(--text-primary);
-      padding: var(--space-5) var(--space-4);
-      text-align: center;
+      text-align: left;
+      position: relative;
+      padding-left: var(--space-4);
+      border-left: 2px solid var(--accent);
     }
     .mk-stat-number {
       font-size: var(--text-stat);
@@ -375,66 +351,42 @@
       letter-spacing: var(--tracking-display);
       line-height: 1;
       margin-bottom: var(--space-2);
+      color: var(--text-primary);
     }
     .mk-stat-number .accent { color: var(--accent); }
     .mk-stat-label {
       font-size: var(--text-xs);
-      font-weight: var(--fw-bold);
+      font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
     }
     .mk-stat-context {
       display: block;
-      margin-top: var(--space-2);
       font-size: 0.625rem;
-      color: rgba(255, 255, 255, 0.35);
+      color: var(--text-muted);
+      font-weight: var(--fw-bold);
       letter-spacing: 0.04em;
     }
 
-    /* ========== SECTION LABEL ========== */
-    .mk-section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-size: var(--text-xs);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--tracking-wider);
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: var(--space-6);
-    }
-    .mk-section-label::before {
-      content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
-    }
-
-    .mk-section-heading {
-      font-size: var(--text-3xl);
-      font-weight: var(--fw-black);
-      letter-spacing: var(--tracking-display);
-      line-height: 1.05;
-      margin-bottom: var(--space-7);
-      -webkit-text-stroke: 1px var(--text-primary);
-      paint-order: stroke fill;
-    }
-    .mk-section-heading .accent { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
-
-    /* ========== AUDIENCE ========== */
+    /* ========== AUDIENCE (3 columns) ========== */
     .mk-audience {
       padding-top: var(--section-py);
       padding-bottom: var(--section-py);
-      border-top: 1px solid var(--border);
     }
     .mk-audience-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-7);
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
     }
     .mk-audience-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: var(--card-py) var(--card-px);
+      display: flex;
+      flex-direction: column;
     }
     .mk-audience-card-title {
       font-size: var(--text-xs);
@@ -442,29 +394,25 @@
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: var(--space-5);
-    }
-    .mk-audience-card-platform {
-      float: right;
-      color: var(--accent);
+      margin-bottom: var(--space-4);
     }
 
     .mk-bar-row {
       display: grid;
-      grid-template-columns: 90px 1fr 60px;
+      grid-template-columns: 70px 1fr 42px;
       align-items: center;
-      gap: var(--space-4);
-      padding: var(--space-3) 0;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
       border-top: 1px solid var(--border);
     }
-    .mk-bar-row:first-child { border-top: none; }
+    .mk-bar-row:first-of-type { border-top: none; }
     .mk-bar-label {
       font-size: var(--text-sm);
       font-weight: var(--fw-bold);
       color: var(--text-secondary);
     }
     .mk-bar-track {
-      height: 8px;
+      height: 6px;
       background: var(--bg-elevated);
       border-radius: var(--radius-pill);
       overflow: hidden;
@@ -480,25 +428,25 @@
     .mk-bar-fill.animated { transform: scaleX(var(--fill, 1)); }
     .mk-bar-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: var(--text-sm);
+      font-size: var(--text-xs);
       font-weight: var(--fw-bold);
       text-align: right;
     }
 
-    /* Gender donut (CSS only) */
+    /* Gender donut (compact) */
     .mk-gender {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: var(--space-6);
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      gap: var(--space-4);
+      flex: 1;
+      justify-content: center;
     }
     .mk-donut {
-      --p: 88;
-      width: 120px;
-      height: 120px;
+      --p: 74;
+      width: 110px; height: 110px;
       border-radius: 50%;
-      background:
-        conic-gradient(var(--accent) calc(var(--p) * 1%), var(--bg-elevated) 0);
+      background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--bg-elevated) 0);
       display: flex; align-items: center; justify-content: center;
       position: relative;
     }
@@ -510,34 +458,47 @@
     }
     .mk-donut-inner {
       position: relative;
-      font-size: var(--text-xl);
+      font-size: var(--text-lg);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-tight);
     }
     .mk-gender-legend {
       display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .mk-gender-legend-row {
-      display: flex; align-items: center; gap: var(--space-3);
-      font-size: var(--text-sm);
+      display: flex; align-items: center; gap: var(--space-2);
+      font-size: var(--text-xs);
       font-weight: var(--fw-bold);
     }
     .mk-gender-dot {
-      width: 12px; height: 12px; border-radius: 50%;
+      width: 10px; height: 10px; border-radius: 50%;
     }
 
-    /* ========== TOP VIDEOS ========== */
+    /* ========== VIDEOS I LOVE ========== */
     .mk-videos {
       padding-top: var(--section-py);
       padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
-    .mk-videos-grid {
+    .mk-videos-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-5);
+      gap: var(--space-4);
+    }
+    .mk-videos-row + .mk-videos-row {
+      margin-top: var(--space-4);
+    }
+    .mk-videos-row-label {
+      font-size: var(--text-xs);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: var(--space-5);
+      margin-bottom: var(--space-3);
     }
     .mk-video-card {
       display: flex;
@@ -549,8 +510,8 @@
       transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
     }
     .mk-video-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.1);
     }
     .mk-video-thumb {
       position: relative;
@@ -562,23 +523,23 @@
       width: 100%; height: 100%; object-fit: cover; display: block;
       transition: transform 0.6s var(--ease-out-expo);
     }
-    .mk-video-card:hover .mk-video-thumb img { transform: scale(1.05); }
+    .mk-video-card:hover .mk-video-thumb img { transform: scale(1.04); }
     .mk-video-play {
       position: absolute;
       top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 56px; height: 56px;
+      width: 44px; height: 44px;
       background: rgba(214, 40, 40, 0.95);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       color: #fff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
     .mk-video-views {
       position: absolute;
       top: var(--space-3); right: var(--space-3);
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.78);
       color: #fff;
-      font-size: var(--text-xs);
+      font-size: 0.625rem;
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
@@ -587,10 +548,10 @@
       backdrop-filter: blur(4px);
     }
     .mk-video-meta {
-      padding: var(--space-4) var(--space-5);
+      padding: var(--space-3) var(--space-4);
     }
     .mk-video-title {
-      font-size: var(--text-md);
+      font-size: var(--text-sm);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-tight);
       line-height: 1.35;
@@ -601,7 +562,7 @@
       overflow: hidden;
     }
     .mk-video-date {
-      font-size: var(--text-xs);
+      font-size: 0.6875rem;
       font-weight: var(--fw-bold);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
@@ -610,7 +571,7 @@
     .mk-videos-loading {
       grid-column: 1 / -1;
       text-align: center;
-      padding: var(--space-7) 0;
+      padding: var(--space-6) 0;
       color: var(--text-muted);
       font-size: var(--text-sm);
       letter-spacing: var(--tracking-wide);
@@ -618,60 +579,58 @@
       font-weight: var(--fw-bold);
     }
 
-    /* ========== PILLARS ========== */
+    /* ========== PILLARS (magazine strip) ========== */
     .mk-pillars {
       padding-top: var(--section-py);
       padding-bottom: var(--section-py);
       border-top: 1px solid var(--border);
     }
-    .mk-pillars-grid {
+    .mk-pillars-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-4);
-    }
-    .mk-pillar {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: var(--card-py) var(--card-px);
-      transition: all 0.4s var(--ease-out-expo);
-      position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
     }
-    .mk-pillar::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 3px; background: var(--accent);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.4s var(--ease-out-expo);
+    .mk-pillar-cell {
+      background: var(--bg-card);
+      padding: var(--space-5) var(--space-5);
+      position: relative;
+      border-right: 1px solid var(--border);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: background 0.4s var(--ease-out-expo);
     }
-    .mk-pillar:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    .mk-pillar-cell:last-child { border-right: none; }
+    .mk-pillar-cell:hover { background: var(--bg-elevated); }
+    .mk-pillar-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--tracking-wide);
+      color: var(--text-muted);
     }
-    .mk-pillar:hover::after { transform: scaleX(1); }
     .mk-pillar-icon {
-      font-size: 2.5rem;
-      margin-bottom: var(--space-4);
-      display: block;
+      font-size: 1.875rem;
+      margin-top: var(--space-3);
     }
     .mk-pillar-name {
       font-size: var(--text-lg);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-tight);
-      margin-bottom: var(--space-2);
+      line-height: 1.1;
     }
     .mk-pillar-desc {
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: var(--space-4);
-    }
-    .mk-pillar-tag {
       font-size: var(--text-xs);
       font-weight: var(--fw-bold);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
       color: var(--accent);
+      margin-top: var(--space-2);
     }
 
     /* ========== BRAND STRIP ========== */
@@ -691,7 +650,7 @@
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.55);
-      margin-bottom: var(--space-7);
+      margin-bottom: var(--space-5);
     }
     .mk-brand-label::before {
       content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
@@ -704,7 +663,7 @@
     .mk-brand-track {
       display: flex;
       align-items: center;
-      gap: clamp(3rem, 8vw, 6rem);
+      gap: clamp(2.5rem, 7vw, 5rem);
       width: max-content;
       animation: brandScroll 32s linear infinite;
     }
@@ -715,7 +674,7 @@
     }
     .mk-brand-logo {
       flex-shrink: 0;
-      height: clamp(2rem, 4vw, 3rem);
+      height: clamp(1.5rem, 3vw, 2.25rem);
       width: auto;
       opacity: 0.75;
       filter: brightness(0) invert(1);
@@ -732,16 +691,16 @@
     }
     .mk-services-intro {
       max-width: 60ch;
-      font-size: var(--text-lg);
+      font-size: var(--text-md);
       color: var(--text-secondary);
       line-height: 1.55;
-      margin-bottom: var(--space-7);
+      margin-bottom: var(--space-6);
     }
     .mk-services-intro strong { color: var(--text-primary); font-weight: var(--fw-bold); }
     .mk-services-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-5);
+      gap: var(--space-4);
     }
     .mk-service {
       background: var(--bg-card);
@@ -754,12 +713,12 @@
     .mk-service:hover {
       border-color: var(--border-hover);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     }
     .mk-service-tag {
       position: absolute;
-      top: var(--space-5); right: var(--space-5);
-      font-size: var(--text-xs);
+      top: var(--space-4); right: var(--space-4);
+      font-size: 0.625rem;
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
@@ -769,72 +728,68 @@
       border-radius: var(--radius-pill);
     }
     .mk-service-platforms {
-      font-size: var(--text-xs);
+      font-size: 0.625rem;
       font-weight: var(--fw-bold);
       letter-spacing: var(--tracking-wide);
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: var(--space-3);
+      margin-bottom: var(--space-2);
     }
     .mk-service-name {
       font-size: var(--text-xl);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-tight);
       line-height: 1.1;
-      margin-bottom: var(--space-3);
+      margin-bottom: var(--space-2);
     }
     .mk-service-desc {
       font-size: var(--text-sm);
       color: var(--text-secondary);
       line-height: 1.55;
     }
-    .mk-service-callout {
+
+    .mk-promise {
       background: var(--accent-soft);
       border: 1px solid var(--accent-medium);
       border-radius: var(--radius-md);
       padding: var(--card-py) var(--card-px);
       margin-top: var(--space-5);
       display: flex;
-      gap: var(--space-5);
+      gap: var(--space-4);
       align-items: flex-start;
     }
-    .mk-service-callout-icon {
+    .mk-promise-icon {
       flex-shrink: 0;
-      width: 40px; height: 40px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       background: var(--accent);
       color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem;
     }
-    .mk-service-callout-text {
+    .mk-promise-text {
       font-size: var(--text-base);
       line-height: 1.6;
       color: var(--text-primary);
     }
-    .mk-service-callout-text strong {
+    .mk-promise-text strong {
       font-weight: var(--fw-black);
       color: var(--accent);
     }
 
-    /* ========== PROCESS ========== */
-    .mk-process {
-      padding-top: var(--section-py);
-      padding-bottom: var(--section-py);
-      border-top: 1px solid var(--border);
-    }
+    /* PROCESS (no heading, lives under promise) */
     .mk-process-timeline {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: var(--space-4);
       position: relative;
+      margin-top: var(--space-6);
     }
     .mk-process-timeline::before {
       content: '';
       position: absolute;
-      top: 24px;
-      left: 10%;
-      right: 10%;
+      top: 18px;
+      left: 12%;
+      right: 12%;
       height: 2px;
       background: var(--border);
     }
@@ -843,13 +798,13 @@
       position: relative;
     }
     .mk-process-num {
-      width: 48px; height: 48px;
+      width: 38px; height: 38px;
       background: var(--bg-card);
       border: 2px solid var(--accent);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto var(--space-4);
-      font-size: var(--text-lg);
+      margin: 0 auto var(--space-3);
+      font-size: var(--text-base);
       font-weight: var(--fw-black);
       color: var(--accent);
       position: relative;
@@ -859,21 +814,22 @@
       font-size: var(--text-sm);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-tight);
-      margin-bottom: var(--space-2);
+      margin-bottom: var(--space-1);
     }
     .mk-process-desc {
-      font-size: var(--text-xs);
+      font-size: 0.6875rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.4;
+      font-weight: var(--fw-regular);
     }
     .mk-process-time {
-      display: inline-block;
-      margin-top: var(--space-7);
-      padding: var(--space-3) var(--space-5);
-      background: var(--bg-elevated);
-      border-radius: var(--radius-pill);
-      font-size: var(--text-sm);
+      display: block;
+      margin-top: var(--space-5);
+      text-align: center;
+      font-size: var(--text-xs);
       font-weight: var(--fw-bold);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
       color: var(--text-secondary);
     }
     .mk-process-time strong {
@@ -882,7 +838,7 @@
     }
     .mk-process-time .accent { color: var(--accent); }
 
-    /* ========== FINAL CTA ========== */
+    /* ========== FINAL CTA (compact) ========== */
     .mk-final-cta {
       padding-top: var(--section-py);
       padding-bottom: var(--section-py);
@@ -891,42 +847,78 @@
       background: var(--text-primary);
       color: #fff;
       border-radius: var(--radius-lg);
-      padding: clamp(2.5rem, 6vw, 5rem);
+      padding: clamp(2rem, 5vw, 3.5rem);
       text-align: center;
     }
     .mk-final-cta h2 {
-      font-size: var(--text-3xl);
+      font-size: var(--text-2xl);
       font-weight: var(--fw-black);
       letter-spacing: var(--tracking-display);
-      line-height: 1.05;
-      margin-bottom: var(--space-5);
-      -webkit-text-stroke: 1px #fff;
-      paint-order: stroke fill;
+      line-height: 1.1;
+      margin-bottom: var(--space-3);
     }
-    .mk-final-cta h2 .accent { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+    .mk-final-cta h2 .accent { color: var(--accent); }
     .mk-final-cta p {
-      font-size: var(--text-lg);
+      font-size: var(--text-md);
       color: rgba(255,255,255,0.7);
       max-width: 50ch;
-      margin: 0 auto var(--space-7);
+      margin: 0 auto var(--space-6);
       line-height: 1.55;
     }
-    .mk-final-email {
+    .mk-final-actions {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .mk-btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: var(--space-3);
-      font-size: clamp(1.125rem, 2vw, 1.5rem);
+      gap: var(--space-2);
+      font-size: var(--text-sm);
       font-weight: var(--fw-black);
-      padding: var(--space-5) var(--space-7);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: var(--space-3) var(--space-5);
       border-radius: var(--radius-pill);
       background: var(--accent);
       color: #fff;
+      border: none;
+      cursor: pointer;
       transition: transform 0.4s var(--ease-out-expo);
+      font-family: inherit;
     }
-    .mk-final-email:hover { transform: translateY(-2px); }
+    .mk-btn-primary:hover { transform: translateY(-1px); }
+    .mk-btn-primary:active { transform: scale(0.97); }
+    .mk-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: var(--fw-black);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      font-family: inherit;
+    }
+    .mk-btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .mk-btn-secondary:active { transform: scale(0.97); }
+    .mk-btn-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 1rem; height: 1rem;
+    }
     .mk-final-meta {
-      margin-top: var(--space-6);
-      font-size: var(--text-xs);
+      margin-top: var(--space-5);
+      font-size: 0.625rem;
       font-weight: var(--fw-bold);
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
@@ -935,7 +927,7 @@
 
     /* ========== FOOTER ========== */
     .mk-footer {
-      padding: var(--space-6) 0;
+      padding: var(--space-5) 0;
       border-top: 1px solid var(--border);
     }
     .mk-footer-inner {
@@ -943,13 +935,14 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: var(--space-4);
+      gap: var(--space-3);
     }
     .mk-footer-text {
       font-size: var(--text-xs);
       font-weight: var(--fw-bold);
       color: var(--text-muted);
     }
+    .mk-footer-links { display: flex; gap: var(--space-5); }
     .mk-footer-link {
       font-size: var(--text-xs);
       font-weight: var(--fw-bold);
@@ -963,7 +956,7 @@
     /* ========== REVEAL ANIMATIONS ========== */
     .reveal {
       opacity: 0;
-      transform: translateY(2rem);
+      transform: translateY(1.5rem);
       filter: blur(4px);
       transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo), filter 0.8s var(--ease-out-expo);
     }
@@ -975,37 +968,46 @@
 
     /* ========== RESPONSIVE ========== */
     @media (max-width: 968px) {
-      .mk-hero-grid { grid-template-columns: 1fr; gap: var(--space-7); }
-      .mk-hero-photo { max-width: 320px; }
-      .mk-stats-grid { grid-template-columns: 1fr 1fr; gap: 1px; }
+      .mk-hero-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+      .mk-hero-photo { max-width: 220px; margin: 0 auto; }
+      .mk-stats-grid { grid-template-columns: 1fr 1fr; gap: var(--space-4); }
       .mk-audience-grid { grid-template-columns: 1fr; }
-      .mk-videos-grid { grid-template-columns: 1fr 1fr; }
-      .mk-pillars-grid { grid-template-columns: 1fr 1fr; }
+      .mk-videos-row { grid-template-columns: 1fr 1fr; }
+      .mk-pillars-strip { grid-template-columns: 1fr 1fr; }
+      .mk-pillar-cell:nth-child(2) { border-right: none; }
+      .mk-pillar-cell:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
       .mk-services-grid { grid-template-columns: 1fr; }
-      .mk-process-timeline { grid-template-columns: 1fr; gap: var(--space-5); }
+      .mk-process-timeline { grid-template-columns: 1fr 1fr; gap: var(--space-5); }
       .mk-process-timeline::before { display: none; }
     }
-    @media (max-width: 768px) {
+    @media (max-width: 640px) {
       .nav-links, .nav-cta-wrap { display: none; }
       .nav-toggle { display: block; }
-      .mk-videos-grid { grid-template-columns: 1fr; }
-      .mk-pillars-grid { grid-template-columns: 1fr 1fr; }
-      .mk-bar-row { grid-template-columns: 80px 1fr 50px; gap: var(--space-3); }
-      .mk-gender { grid-template-columns: 1fr; text-align: center; }
-      .mk-gender .mk-donut { margin: 0 auto; }
+      :root {
+        --section-py: clamp(2rem, 5vh, 3rem);
+        --section-py-sm: clamp(1.25rem, 3vh, 2rem);
+      }
+      .mk-stats-grid { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+      .mk-stat { padding-left: var(--space-3); }
+      .mk-videos-row { grid-template-columns: 1fr; }
+      .mk-pillars-strip { grid-template-columns: 1fr; }
+      .mk-pillar-cell { border-right: none; border-bottom: 1px solid var(--border); min-height: 120px; padding: var(--space-4); }
+      .mk-pillar-cell:last-child { border-bottom: none; }
+      .mk-process-timeline { grid-template-columns: 1fr; gap: var(--space-3); }
+      .mk-bar-row { grid-template-columns: 64px 1fr 40px; gap: var(--space-2); }
+      .mk-promise { flex-direction: column; }
       .mk-footer-inner { flex-direction: column; text-align: center; }
     }
-    @media (max-width: 480px) {
-      .mk-stats-grid { grid-template-columns: 1fr 1fr; }
-      .mk-pillars-grid { grid-template-columns: 1fr; }
-      .mk-service-callout { flex-direction: column; }
+    @media (max-width: 420px) {
+      .mk-final-actions { flex-direction: column; align-items: stretch; }
+      .mk-btn-primary, .mk-btn-secondary { justify-content: center; }
     }
 
     /* ========== PDF EXPORT MODE ========== */
     .pdf-export .nav,
     .pdf-export .mobile-menu,
     .pdf-export .nav-toggle,
-    .pdf-export #downloadPdfBtn,
+    .pdf-export .mk-final-actions,
     .pdf-export .mk-video-play,
     .pdf-export body::after { display: none !important; }
     .pdf-export .slot-stack { animation: none !important; transform: translateY(0) !important; }
@@ -1046,36 +1048,13 @@
   <section class="mk-hero container">
     <div class="mk-hero-grid">
       <div>
-        <div class="mk-hero-eyebrow reveal">Media Kit · Jack Bing</div>
-        <h1 class="mk-hero-title reveal reveal-delay-1">
-          <span class="slot-rotator">
-            <span class="slot-stack">
-              <span class="slot-word">I CREATE.</span>
-              <span class="slot-word">I LEARN.</span>
-              <span class="slot-word">I ENTERTAIN.</span>
-              <span class="slot-word" aria-hidden="true">I CREATE.</span>
-            </span>
-          </span>
-        </h1>
-        <p class="mk-hero-sub reveal reveal-delay-2">
-          Trying new things and bringing thousands of people along for the ride. <strong>Every day.</strong>
+        <div class="mk-hero-eyebrow reveal">Media Kit, Jack Bing</div>
+        <h1 class="mk-hero-name reveal reveal-delay-1">Jack Bing<span class="accent">.</span></h1>
+        <p class="mk-tagline reveal reveal-delay-2">
+          I <span class="slot-rotator"><span class="slot-stack"><span class="slot-word">create</span><span class="slot-word">learn</span><span class="slot-word">entertain</span><span class="slot-word" aria-hidden="true">create</span></span></span> and bring thousands of people along for the ride. <span class="strong-end">Every day.</span>
         </p>
-        <div class="mk-hero-ctas reveal reveal-delay-3">
-          <a href="mailto:management@jackbing.com" class="mk-btn-primary">
-            Get in touch
-            <span class="mk-btn-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-            </span>
-          </a>
-          <button class="mk-btn-secondary" id="downloadPdfBtn">
-            Download as PDF
-            <span class="mk-btn-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </span>
-          </button>
-        </div>
-        <div class="mk-hero-meta reveal reveal-delay-4">
-          <span>1–2 week turnaround · Faster on Shorts</span>
+        <div class="mk-hero-meta reveal reveal-delay-3">
+          1 to 2 week turnaround, faster on Shorts
         </div>
       </div>
       <div class="reveal reveal-delay-2">
@@ -1096,19 +1075,19 @@
     <div class="container">
       <div class="mk-stats-grid">
         <div class="mk-stat reveal">
-          <div class="mk-stat-number"><span class="count-up" data-target="10.3" data-suffix="M+" data-decimals="1">0</span></div>
+          <div class="mk-stat-number"><span class="count-up" data-target="10.3" data-suffix="M" data-decimals="1">0</span><span class="accent">+</span></div>
           <div class="mk-stat-label">Views</div>
-          <span class="mk-stat-context">Last 12 months · YT + TikTok</span>
+          <span class="mk-stat-context">Last 12 months, YT + TikTok</span>
         </div>
         <div class="mk-stat reveal reveal-delay-1">
           <div class="mk-stat-number"><span class="count-up" data-target="85" data-suffix="K">0</span></div>
           <div class="mk-stat-label">Monthly Viewers</div>
-          <span class="mk-stat-context">YouTube · 30-day rolling avg</span>
+          <span class="mk-stat-context">YouTube, 30 day rolling avg</span>
         </div>
         <div class="mk-stat reveal reveal-delay-2">
           <div class="mk-stat-number"><span class="count-up" data-target="65" data-suffix="%">0</span></div>
           <div class="mk-stat-label">Avg Retention</div>
-          <span class="mk-stat-context">Top Shorts · ~2× industry avg</span>
+          <span class="mk-stat-context">Top Shorts, ~2x industry avg</span>
         </div>
         <div class="mk-stat reveal reveal-delay-3">
           <div class="mk-stat-number"><span id="streakDays">0</span><span class="accent">+</span></div>
@@ -1127,166 +1106,145 @@
     <div class="mk-audience-grid">
       <!-- AGE -->
       <div class="mk-audience-card reveal reveal-delay-1">
-        <div class="mk-audience-card-title">Age <span class="mk-audience-card-platform">YouTube</span></div>
+        <div class="mk-audience-card-title">Age</div>
         <div class="mk-bar-row">
-          <div class="mk-bar-label">13–17</div>
-          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.102"></div></div>
-          <div class="mk-bar-value">10.2%</div>
+          <div class="mk-bar-label">Under 18</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.03"></div></div>
+          <div class="mk-bar-value">3%</div>
         </div>
         <div class="mk-bar-row">
-          <div class="mk-bar-label">18–24</div>
-          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.261"></div></div>
-          <div class="mk-bar-value">26.1%</div>
+          <div class="mk-bar-label">18 to 24</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.28"></div></div>
+          <div class="mk-bar-value">28%</div>
         </div>
         <div class="mk-bar-row">
-          <div class="mk-bar-label">25–34</div>
-          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.392"></div></div>
-          <div class="mk-bar-value">39.2%</div>
+          <div class="mk-bar-label">25 to 34</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.48"></div></div>
+          <div class="mk-bar-value">48%</div>
         </div>
         <div class="mk-bar-row">
-          <div class="mk-bar-label">35–44</div>
-          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.153"></div></div>
-          <div class="mk-bar-value">15.3%</div>
+          <div class="mk-bar-label">35 to 44</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.15"></div></div>
+          <div class="mk-bar-value">15%</div>
         </div>
         <div class="mk-bar-row">
           <div class="mk-bar-label">45+</div>
-          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.093"></div></div>
-          <div class="mk-bar-value">9.3%</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.06"></div></div>
+          <div class="mk-bar-value">6%</div>
         </div>
       </div>
 
       <!-- GENDER -->
       <div class="mk-audience-card reveal reveal-delay-2">
-        <div class="mk-audience-card-title">Gender <span class="mk-audience-card-platform">YouTube</span></div>
-        <div class="mk-gender" style="margin-top: var(--space-6);">
-          <div class="mk-donut" style="--p: 88;">
-            <div class="mk-donut-inner">88%</div>
+        <div class="mk-audience-card-title">Gender</div>
+        <div class="mk-gender">
+          <div class="mk-donut" style="--p: 74;">
+            <div class="mk-donut-inner">74%</div>
           </div>
           <div class="mk-gender-legend">
             <div class="mk-gender-legend-row">
               <span class="mk-gender-dot" style="background: var(--accent);"></span>
-              <span>Male · 87.7%</span>
+              <span>Male, 74%</span>
             </div>
             <div class="mk-gender-legend-row">
               <span class="mk-gender-dot" style="background: var(--bg-elevated); border: 1px solid var(--border);"></span>
-              <span>Female · 11.5%</span>
-            </div>
-            <div class="mk-gender-legend-row" style="color: var(--text-muted);">
-              <span class="mk-gender-dot" style="background: var(--text-muted); opacity: 0.4;"></span>
-              <span>Other · 0.8%</span>
+              <span>Female, 26%</span>
             </div>
           </div>
-        </div>
-        <div style="margin-top: var(--space-7); padding-top: var(--space-5); border-top: 1px solid var(--border); font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6;">
-          <strong style="color: var(--text-primary); font-weight: var(--fw-bold);">TikTok skews more balanced:</strong> 68% male / 32% female — strong cross-platform reach into both demographics.
         </div>
       </div>
 
-      <!-- TOP COUNTRIES -->
-      <div class="mk-audience-card reveal reveal-delay-3" style="grid-column: 1 / -1;">
-        <div class="mk-audience-card-title">Top Countries <span class="mk-audience-card-platform">YouTube + TikTok</span></div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-7);">
-          <div>
-            <div style="font-size: var(--text-xs); font-weight: var(--fw-bold); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-4);">YouTube</div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇺🇸 USA</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.245"></div></div>
-              <div class="mk-bar-value">24.5%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇬🇧 UK</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.095"></div></div>
-              <div class="mk-bar-value">9.5%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇦🇺 Aus</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.089"></div></div>
-              <div class="mk-bar-value">8.9%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇩🇪 Ger</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.074"></div></div>
-              <div class="mk-bar-value">7.4%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇳🇱 Neth</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.043"></div></div>
-              <div class="mk-bar-value">4.3%</div>
-            </div>
-          </div>
-          <div>
-            <div style="font-size: var(--text-xs); font-weight: var(--fw-bold); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-4);">TikTok</div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇬🇧 UK</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.137"></div></div>
-              <div class="mk-bar-value">13.7%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇦🇺 Aus</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.101"></div></div>
-              <div class="mk-bar-value">10.1%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇺🇸 USA</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.079"></div></div>
-              <div class="mk-bar-value">7.9%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇩🇪 Ger</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.057"></div></div>
-              <div class="mk-bar-value">5.7%</div>
-            </div>
-            <div class="mk-bar-row">
-              <div class="mk-bar-label">🇨🇦 Can</div>
-              <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.055"></div></div>
-              <div class="mk-bar-value">5.5%</div>
-            </div>
-          </div>
+      <!-- COUNTRIES (combined weighted) -->
+      <div class="mk-audience-card reveal reveal-delay-3">
+        <div class="mk-audience-card-title">Top Countries</div>
+        <div class="mk-bar-row">
+          <div class="mk-bar-label">🇺🇸 USA</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.13"></div></div>
+          <div class="mk-bar-value">13%</div>
         </div>
-        <div style="margin-top: var(--space-7); padding: var(--space-5); background: var(--accent-soft); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--text-primary); line-height: 1.6;">
-          <strong style="font-weight: var(--fw-black); color: var(--accent);">English-speaking markets dominate:</strong> US + UK + Australia = ~43% of YouTube views and ~32% of TikTok views. Strong European reach via Germany &amp; Netherlands rounds out the top 5 on both platforms.
+        <div class="mk-bar-row">
+          <div class="mk-bar-label">🇬🇧 UK</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.12"></div></div>
+          <div class="mk-bar-value">12%</div>
+        </div>
+        <div class="mk-bar-row">
+          <div class="mk-bar-label">🇦🇺 Aus</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.10"></div></div>
+          <div class="mk-bar-value">10%</div>
+        </div>
+        <div class="mk-bar-row">
+          <div class="mk-bar-label">🇩🇪 Ger</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.06"></div></div>
+          <div class="mk-bar-value">6%</div>
+        </div>
+        <div class="mk-bar-row">
+          <div class="mk-bar-label">🇳🇱 Neth</div>
+          <div class="mk-bar-track"><div class="mk-bar-fill" style="--fill: 0.05"></div></div>
+          <div class="mk-bar-value">5%</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TOP VIDEOS -->
+  <!-- VIDEOS I LOVE -->
   <section class="mk-videos container">
     <div class="mk-section-label reveal">The highlight reel</div>
-    <h2 class="mk-section-heading reveal reveal-delay-1">Top-performing videos<span class="accent">.</span></h2>
-    <div class="mk-videos-grid reveal reveal-delay-2" id="topVideos">
-      <div class="mk-videos-loading">Loading top videos…</div>
+    <h2 class="mk-section-heading reveal reveal-delay-1">Videos I love<span class="accent">.</span></h2>
+
+    <div class="mk-videos-row-label reveal">Long form</div>
+    <div class="mk-videos-row reveal" id="longformVideos">
+      <div class="mk-videos-loading">Loading videos...</div>
+    </div>
+
+    <div class="mk-videos-row-label reveal">Top performing Shorts</div>
+    <div class="mk-videos-row reveal" id="shortsVideos">
+      <div class="mk-videos-loading">Loading videos...</div>
     </div>
   </section>
 
-  <!-- CONTENT PILLARS -->
+  <!-- CONTENT PILLARS (magazine strip) -->
   <section class="mk-pillars container">
     <div class="mk-section-label reveal">What I cover</div>
-    <h2 class="mk-section-heading reveal reveal-delay-1">Content pillars<span class="accent">.</span></h2>
-    <div class="mk-pillars-grid">
-      <div class="mk-pillar reveal reveal-delay-1">
-        <span class="mk-pillar-icon">🌍</span>
-        <div class="mk-pillar-name">Geography</div>
-        <div class="mk-pillar-desc">Travle, Globle, Flagle, GeoGuessr. Daily geography game challenges — my single most viral content type.</div>
-        <div class="mk-pillar-tag">Top performer · 280K+ on a single Short</div>
+    <div class="mk-pillars-strip reveal reveal-delay-1">
+      <div class="mk-pillar-cell">
+        <div>
+          <div class="mk-pillar-num">01</div>
+          <div class="mk-pillar-icon">🌍</div>
+        </div>
+        <div>
+          <div class="mk-pillar-name">Geography</div>
+          <div class="mk-pillar-desc">Learning + Challenges</div>
+        </div>
       </div>
-      <div class="mk-pillar reveal reveal-delay-2">
-        <span class="mk-pillar-icon">🎮</span>
-        <div class="mk-pillar-name">Gaming</div>
-        <div class="mk-pillar-desc">Console mods, retro builds, indie discoveries, playthroughs. Tech-savvy gaming audience that actually buys gear.</div>
-        <div class="mk-pillar-tag">Picofly Switch hit 122K views</div>
+      <div class="mk-pillar-cell">
+        <div>
+          <div class="mk-pillar-num">02</div>
+          <div class="mk-pillar-icon">🎮</div>
+        </div>
+        <div>
+          <div class="mk-pillar-name">Gaming</div>
+          <div class="mk-pillar-desc">Playthroughs and Reviews</div>
+        </div>
       </div>
-      <div class="mk-pillar reveal reveal-delay-3">
-        <span class="mk-pillar-icon">🛠️</span>
-        <div class="mk-pillar-name">Tech</div>
-        <div class="mk-pillar-desc">Hands-on tech reviews, builds, weird gadgets, software finds. Honest takes that don't read as ads.</div>
-        <div class="mk-pillar-tag">Authentic-first integrations</div>
+      <div class="mk-pillar-cell">
+        <div>
+          <div class="mk-pillar-num">03</div>
+          <div class="mk-pillar-icon">🛠️</div>
+        </div>
+        <div>
+          <div class="mk-pillar-name">Tech</div>
+          <div class="mk-pillar-desc">Unboxings and Reviews</div>
+        </div>
       </div>
-      <div class="mk-pillar reveal reveal-delay-4">
-        <span class="mk-pillar-icon">🏎️</span>
-        <div class="mk-pillar-name">Cars · 300ZX</div>
-        <div class="mk-pillar-desc">Long-running Nissan 300ZX Z32 project car series. Auto parts, tools, performance gear, dash cams — all on the table.</div>
-        <div class="mk-pillar-tag">Ongoing build series</div>
+      <div class="mk-pillar-cell">
+        <div>
+          <div class="mk-pillar-num">04</div>
+          <div class="mk-pillar-icon">🏎️</div>
+        </div>
+        <div>
+          <div class="mk-pillar-name">Cars, 300ZX</div>
+          <div class="mk-pillar-desc">Build Series</div>
+        </div>
       </div>
     </div>
   </section>
@@ -1305,7 +1263,6 @@
         <img class="mk-brand-logo" src="logos/razer.svg" alt="Razer">
         <img class="mk-brand-logo" src="logos/fanatee.svg" alt="Fanatee">
         <img class="mk-brand-logo" src="logos/trainwrecklabs.png" alt="Trainwreck Labs">
-        <!-- duplicate for seamless loop -->
         <img class="mk-brand-logo" src="logos/redbull.svg" alt="" aria-hidden="true">
         <img class="mk-brand-logo" src="logos/xbox.svg" alt="" aria-hidden="true">
         <img class="mk-brand-logo" src="logos/forza.svg" alt="" aria-hidden="true">
@@ -1317,27 +1274,27 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
+  <!-- SERVICES + PROMISE + PROCESS -->
   <section class="mk-services container">
     <div class="mk-section-label reveal">Working together</div>
     <h2 class="mk-section-heading reveal reveal-delay-1">What I offer<span class="accent">.</span></h2>
     <p class="mk-services-intro reveal reveal-delay-2">
-      Every brand is different and so is every collab. Rather than a fixed rate card, <strong>let's chat about what you're trying to do</strong> and I'll put together something that actually fits — solo execution or a multi-platform package.
+      Every brand is different and so is every collab. Rather than a fixed rate card, <strong>let's chat about what you're trying to do</strong> and I'll put together something that actually fits, solo execution or a multi-platform package.
     </p>
 
     <div class="mk-services-grid">
       <div class="mk-service reveal reveal-delay-1">
         <div class="mk-service-platforms">YouTube</div>
         <div class="mk-service-name">Dedicated video</div>
-        <div class="mk-service-desc">A full sponsored long-form video built around your product, brand, or campaign. Treated like any other video on the channel — meaning the audience actually watches.</div>
+        <div class="mk-service-desc">A full sponsored long-form video built around your product, brand, or campaign. Treated like any other video on the channel, meaning the audience actually watches.</div>
       </div>
       <div class="mk-service reveal reveal-delay-2">
-        <div class="mk-service-tag">Most popular</div>
         <div class="mk-service-platforms">YouTube</div>
         <div class="mk-service-name">Video integration</div>
-        <div class="mk-service-desc">A native sponsor spot inside a regular video. Organic, conversational — feels like a recommendation, not an ad break.</div>
+        <div class="mk-service-desc">A native sponsor spot inside a regular video. Organic, conversational, feels like a recommendation rather than an ad break.</div>
       </div>
       <div class="mk-service reveal reveal-delay-3">
+        <div class="mk-service-tag">Most popular</div>
         <div class="mk-service-platforms">YouTube Shorts + TikTok</div>
         <div class="mk-service-name">Shortform across platforms</div>
         <div class="mk-service-desc">Vertical video on both YouTube Shorts and TikTok simultaneously. Same effort, double the reach. Where the bulk of the 10M+ yearly views actually live.</div>
@@ -1345,55 +1302,44 @@
       <div class="mk-service reveal reveal-delay-4">
         <div class="mk-service-platforms">Bundle</div>
         <div class="mk-service-name">Combination packages</div>
-        <div class="mk-service-desc">Mix long-form, integrations, and shortform across platforms for full-funnel coverage. Custom-built per campaign — usually the best ROI.</div>
+        <div class="mk-service-desc">Mix long-form, integrations, and shortform across platforms for full-funnel coverage. Custom-built per campaign, usually the best ROI.</div>
       </div>
     </div>
 
-    <div class="mk-service-callout reveal">
-      <div class="mk-service-callout-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="mk-promise reveal">
+      <div class="mk-promise-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       </div>
-      <div class="mk-service-callout-text">
-        <strong>The promise:</strong> integrations should feel like a friend telling you about something cool — not a 60-second ad break. If a product doesn't fit my audience or I wouldn't genuinely use it myself, I'll say no. That's why the ones I do say yes to actually land.
+      <div class="mk-promise-text">
+        <strong>My approach:</strong> Integrations should feel like a friend telling you about something exciting, not a TV ad break. Let's work on something awesome together.
       </div>
     </div>
-  </section>
 
-  <!-- PROCESS -->
-  <section class="mk-process container">
-    <div class="mk-section-label reveal">How it works</div>
-    <h2 class="mk-section-heading reveal reveal-delay-1">From hello to live<span class="accent">.</span></h2>
-    <div class="mk-process-timeline">
-      <div class="mk-process-step reveal reveal-delay-1">
+    <!-- PROCESS (no heading, lives right under promise) -->
+    <div class="mk-process-timeline reveal">
+      <div class="mk-process-step">
         <div class="mk-process-num">1</div>
         <div class="mk-process-name">Get in touch</div>
         <div class="mk-process-desc">Email with your brief, product, or just a "hey, possible fit?"</div>
       </div>
-      <div class="mk-process-step reveal reveal-delay-2">
+      <div class="mk-process-step">
         <div class="mk-process-num">2</div>
         <div class="mk-process-name">Creative chat</div>
         <div class="mk-process-desc">Quick call or thread to nail down the angle that fits both sides.</div>
       </div>
-      <div class="mk-process-step reveal reveal-delay-3">
+      <div class="mk-process-step">
         <div class="mk-process-num">3</div>
         <div class="mk-process-name">Production</div>
-        <div class="mk-process-desc">Concept, shoot, edit. 1–2 weeks for long-form, much faster for Shorts.</div>
+        <div class="mk-process-desc">Concept, shoot, edit. 1 to 2 weeks for long form, faster for Shorts.</div>
       </div>
-      <div class="mk-process-step reveal reveal-delay-4">
+      <div class="mk-process-step">
         <div class="mk-process-num">4</div>
-        <div class="mk-process-name">Review</div>
-        <div class="mk-process-desc">One round of revisions baked in. Big edits only — no nitpicks.</div>
-      </div>
-      <div class="mk-process-step reveal reveal-delay-4">
-        <div class="mk-process-num">5</div>
         <div class="mk-process-name">Publish + report</div>
-        <div class="mk-process-desc">Live on agreed date. Performance recap 7 + 30 days post-launch.</div>
+        <div class="mk-process-desc">Live on agreed date. Performance recap at 7 and 30 days post launch.</div>
       </div>
     </div>
-    <div style="text-align: center;">
-      <div class="mk-process-time reveal">
-        Typical timeline: <strong>1–2 weeks</strong> · Shorts can turn around in <span class="accent">days</span>
-      </div>
+    <div class="mk-process-time reveal">
+      Typical timeline: <strong>1 to 2 weeks.</strong> Shorts can turn around in <span class="accent">days</span>.
     </div>
   </section>
 
@@ -1402,19 +1348,29 @@
     <div class="mk-final-cta-inner reveal">
       <h2>Let's make something<span class="accent">.</span></h2>
       <p>Got a brief, a product, or just an idea you're poking at? Send it through and we'll figure out if it fits. No pressure, no sales pitch.</p>
-      <a href="mailto:management@jackbing.com?subject=Partnership%20inquiry" class="mk-final-email">
-        management@jackbing.com
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-      </a>
-      <div class="mk-final-meta">Typically reply within 24h · NSW, Australia</div>
+      <div class="mk-final-actions">
+        <a href="mailto:management@jackbing.com?subject=Partnership%20inquiry" class="mk-btn-primary">
+          Get in touch
+          <span class="mk-btn-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </span>
+        </a>
+        <button class="mk-btn-secondary" id="downloadPdfBtn">
+          Download as PDF
+          <span class="mk-btn-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </span>
+        </button>
+      </div>
+      <div class="mk-final-meta">Typically reply within 24h. NSW, Australia.</div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="mk-footer">
     <div class="container mk-footer-inner">
-      <div class="mk-footer-text">&copy; 2026 Jack Bing. Media Kit · Last updated automatically.</div>
-      <div style="display: flex; gap: var(--space-5);">
+      <div class="mk-footer-text">&copy; 2026 Jack Bing. Media Kit, last updated automatically.</div>
+      <div class="mk-footer-links">
         <a href="/" class="mk-footer-link">← Back to site</a>
         <a href="mailto:management@jackbing.com" class="mk-footer-link">Email</a>
       </div>
@@ -1426,80 +1382,91 @@
 
   <script>
     /* ============================================
-       YOUTUBE API — TOP VIDEOS (live)
+       YOUTUBE API, videos
        ============================================ */
     const YT_API_KEY = 'AIzaSyD4HPsJNWAw5BmY8KAo4_Um-97tySvj3l4';
     const YT_CHANNEL_ID = 'UCf8caU6SJh_CYq_YrkQaF6w';
+    const LONGFORM_IDS = ['wQgXt7a-Z8E', 'qM30ovCoAGE', 'zftcM59ASnk'];
 
     function formatShort(n) {
       if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
       if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
       return n.toLocaleString();
     }
-
     function escapeHtml(s) {
       const div = document.createElement('div');
       div.textContent = s;
       return div.innerHTML;
     }
+    function renderVideoCard(item) {
+      const id = item.id;
+      const title = item.snippet.title;
+      const thumb = (item.snippet.thumbnails.maxres || item.snippet.thumbnails.high || item.snippet.thumbnails.medium).url;
+      const views = parseInt(item.statistics.viewCount, 10) || 0;
+      const date = item.snippet.publishedAt
+        ? new Date(item.snippet.publishedAt).toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' })
+        : '';
+      return `
+        <a class="mk-video-card" href="https://youtube.com/watch?v=${id}" target="_blank" rel="noopener">
+          <div class="mk-video-thumb">
+            <img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy">
+            <span class="mk-video-views">${formatShort(views)} views</span>
+            <span class="mk-video-play">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </div>
+          <div class="mk-video-meta">
+            <div class="mk-video-title">${escapeHtml(title)}</div>
+            <div class="mk-video-date">${date}</div>
+          </div>
+        </a>`;
+    }
 
-    async function fetchTopVideos() {
-      const container = document.getElementById('topVideos');
-      if (!YT_API_KEY) { container.innerHTML = ''; return; }
+    async function fetchLovedVideos() {
+      if (!YT_API_KEY) return;
+      const longformEl = document.getElementById('longformVideos');
+      const shortsEl   = document.getElementById('shortsVideos');
+
       try {
-        // 1) Most-viewed videos
-        const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YT_CHANNEL_ID}&order=viewCount&type=video&maxResults=6&key=${YT_API_KEY}`;
+        // 1) Longforms by hardcoded ID
+        const longUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${LONGFORM_IDS.join(',')}&key=${YT_API_KEY}`;
+        const longRes = await fetch(longUrl);
+        const longData = await longRes.json();
+        const longMap = {};
+        (longData.items || []).forEach(v => { longMap[v.id] = v; });
+        const longforms = LONGFORM_IDS.map(id => longMap[id]).filter(Boolean);
+        longformEl.innerHTML = longforms.length
+          ? longforms.map(renderVideoCard).join('')
+          : '<div class="mk-videos-loading">Could not load.</div>';
+
+        // 2) Top viewed (Shorts) via search, excluding longforms
+        const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YT_CHANNEL_ID}&order=viewCount&type=video&maxResults=10&key=${YT_API_KEY}`;
         const searchRes = await fetch(searchUrl);
         const searchData = await searchRes.json();
-        if (!searchData.items || !searchData.items.length) {
-          container.innerHTML = '<div class="mk-videos-loading">Could not load videos.</div>';
-          return;
-        }
-
-        // 2) Get view counts in one batched call
-        const ids = searchData.items.map(i => i.id.videoId).join(',');
-        const statsUrl = `https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${ids}&key=${YT_API_KEY}`;
-        const statsRes = await fetch(statsUrl);
-        const statsData = await statsRes.json();
-        const viewMap = {};
-        const dateMap = {};
-        (statsData.items || []).forEach(v => {
-          viewMap[v.id] = parseInt(v.statistics.viewCount, 10) || 0;
-          dateMap[v.id] = v.snippet.publishedAt;
-        });
-
-        // 3) Render
-        container.innerHTML = searchData.items.map(item => {
-          const id = item.id.videoId;
-          const title = item.snippet.title;
-          const thumb = (item.snippet.thumbnails.maxres || item.snippet.thumbnails.high || item.snippet.thumbnails.medium).url;
-          const views = viewMap[id] || 0;
-          const date = dateMap[id] ? new Date(dateMap[id]).toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-          return `
-            <a class="mk-video-card" href="https://youtube.com/watch?v=${id}" target="_blank" rel="noopener">
-              <div class="mk-video-thumb">
-                <img src="${thumb}" alt="${escapeHtml(title)}" loading="lazy">
-                <span class="mk-video-views">${formatShort(views)} views</span>
-                <span class="mk-video-play">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                </span>
-              </div>
-              <div class="mk-video-meta">
-                <div class="mk-video-title">${escapeHtml(title)}</div>
-                <div class="mk-video-date">${date}</div>
-              </div>
-            </a>
-          `;
-        }).join('');
+        const candidateIds = (searchData.items || [])
+          .map(i => i.id.videoId)
+          .filter(id => !LONGFORM_IDS.includes(id))
+          .slice(0, 3);
+        if (!candidateIds.length) { shortsEl.innerHTML = '<div class="mk-videos-loading">Could not load.</div>'; return; }
+        const shortsUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${candidateIds.join(',')}&key=${YT_API_KEY}`;
+        const shortsRes = await fetch(shortsUrl);
+        const shortsData = await shortsRes.json();
+        const shortsMap = {};
+        (shortsData.items || []).forEach(v => { shortsMap[v.id] = v; });
+        const shorts = candidateIds.map(id => shortsMap[id]).filter(Boolean);
+        shortsEl.innerHTML = shorts.length
+          ? shorts.map(renderVideoCard).join('')
+          : '<div class="mk-videos-loading">Could not load.</div>';
       } catch (e) {
-        console.warn('Top videos fetch failed', e);
-        container.innerHTML = '<div class="mk-videos-loading">Could not load videos.</div>';
+        console.warn('Videos fetch failed', e);
+        if (longformEl) longformEl.innerHTML = '<div class="mk-videos-loading">Could not load.</div>';
+        if (shortsEl)   shortsEl.innerHTML   = '<div class="mk-videos-loading">Could not load.</div>';
       }
     }
-    fetchTopVideos();
+    fetchLovedVideos();
 
     /* ============================================
-       STREAK COUNTER (live, matches main site)
+       STREAK COUNTER
        ============================================ */
     (function initStreak() {
       const STREAK_START = new Date('2024-08-01');
@@ -1510,7 +1477,7 @@
     })();
 
     /* ============================================
-       COUNT-UP ANIMATION (on scroll into view)
+       COUNT-UP ANIMATION
        ============================================ */
     function animateCount(el, target, duration, suffix, decimals) {
       const startTime = performance.now();
@@ -1546,7 +1513,6 @@
       entries.forEach(entry => { if (entry.isIntersecting) revealElement(entry.target); });
     }, { threshold: 0.08, rootMargin: '20px 0px -20px 0px' });
     revealEls.forEach(el => observer.observe(el));
-    // Immediate reveal for elements already in viewport
     requestAnimationFrame(() => {
       revealEls.forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -1571,20 +1537,15 @@
     }
 
     /* ============================================
-       PDF DOWNLOAD — generates from live DOM
-       so the PDF always reflects current numbers
+       PDF DOWNLOAD
        ============================================ */
     document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
       const btn = document.getElementById('downloadPdfBtn');
       const originalContent = btn.innerHTML;
-      btn.innerHTML = 'Building PDF…';
+      btn.innerHTML = 'Building PDF...';
       btn.disabled = true;
-
-      // Force everything visible + freeze animations
       document.body.classList.add('pdf-export');
-      // Give the browser a tick to apply class changes
       await new Promise(r => setTimeout(r, 100));
-
       try {
         await html2pdf().set({
           margin: 0,
