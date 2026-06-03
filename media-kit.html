@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Media Kit, Jack Bing</title>
   <meta name="description" content="Jack Bing Media Kit. 10.3M+ views, 85K monthly viewers, 65%+ retention. Brand partnerships, audience demographics, services, and process.">
+
+  <!-- Social sharing (Open Graph + Twitter) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jackbing.com/media-kit">
+  <meta property="og:title" content="Jack Bing, Media Kit">
+  <meta property="og:description" content="10.3M+ views in 12 months, 85K monthly viewers, 65%+ retention on top Shorts. Partnerships, audience, services.">
+  <meta property="og:image" content="https://jackbing.com/images/jack-profile.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jack Bing, Media Kit">
+  <meta name="twitter:description" content="10.3M+ views in 12 months, 85K monthly viewers, 65%+ retention on top Shorts.">
+  <meta name="twitter:image" content="https://jackbing.com/images/jack-profile.jpg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -292,11 +304,11 @@
       background: #22c55e;
     }
 
-    /* HERO PHOTO (smaller, compact) */
+    /* HERO PHOTO (smaller, compact, square crop) */
     .mk-hero-photo {
       position: relative;
-      aspect-ratio: 4 / 5;
-      max-width: 280px;
+      aspect-ratio: 1 / 1;
+      max-width: 320px;
       margin-left: auto;
       border-radius: var(--radius-md);
       overflow: hidden;
@@ -1059,9 +1071,8 @@
       </div>
       <div class="reveal reveal-delay-2">
         <div class="mk-hero-photo">
-          <!-- TO ADD REAL PHOTO: place file in /images/ folder, then replace the placeholder div below with:
-               <img src="images/your-filename.jpg" alt="Jack Bing"> -->
-          <div class="mk-hero-photo-placeholder">
+          <img src="images/jack-profile.jpg" alt="Jack Bing" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="mk-hero-photo-placeholder" style="display:none;">
             <div class="mk-hero-photo-placeholder-mark">JB</div>
             <div class="mk-hero-photo-placeholder-text">Profile photo coming</div>
           </div>
