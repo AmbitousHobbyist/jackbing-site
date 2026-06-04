@@ -1388,8 +1388,8 @@
     </div>
   </footer>
 
-  <!-- html2pdf.js for PDF export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- jsPDF for the clean text-only PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 
   <script>
     /* ============================================
@@ -1559,7 +1559,8 @@
       btn.disabled = true;
 
       try {
-        const jsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+        const jsPDF = window.jspdf && window.jspdf.jsPDF;
+        if (!jsPDF) throw new Error('jsPDF library failed to load');
         const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
         const pageW = 210, pageH = 297;
@@ -1762,8 +1763,8 @@
 
         doc.save('jack-bing-media-kit.pdf');
       } catch (e) {
-        console.warn('PDF generation failed', e);
-        alert('Could not generate PDF. Try again or take a screenshot.');
+        console.error('PDF generation failed:', e);
+        alert('Could not generate PDF. ' + (e.message || 'Try again or take a screenshot.'));
       } finally {
         btn.innerHTML = originalContent;
         btn.disabled = false;
