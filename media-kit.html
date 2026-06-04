@@ -1548,29 +1548,223 @@
     }
 
     /* ============================================
-       PDF DOWNLOAD
+       PDF DOWNLOAD (clean text-only one-pager,
+       built programmatically with jsPDF so the
+       file stays small and reads like a CV)
        ============================================ */
     document.getElementById('downloadPdfBtn').addEventListener('click', async () => {
       const btn = document.getElementById('downloadPdfBtn');
       const originalContent = btn.innerHTML;
       btn.innerHTML = 'Building PDF...';
       btn.disabled = true;
-      document.body.classList.add('pdf-export');
-      await new Promise(r => setTimeout(r, 100));
+
       try {
-        await html2pdf().set({
-          margin: 0,
-          filename: 'jack-bing-media-kit.pdf',
-          image: { type: 'jpeg', quality: 0.95 },
-          html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#f5f3f0' },
-          jsPDF: { unit: 'mm', format: [297, 1500], orientation: 'portrait' },
-          pagebreak: { mode: ['avoid-all'] }
-        }).from(document.querySelector('body')).save();
+        const jsPDF = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+        const pageW = 210, pageH = 297;
+        const M = 16;                                  // margin
+        const W = pageW - M * 2;                       // content width
+        const C_PRIMARY   = [17, 17, 17];
+        const C_SECONDARY = [88, 88, 88];
+        const C_MUTED     = [140, 140, 140];
+        const C_ACCENT    = [214, 40, 40];
+        const C_RULE      = [222, 222, 222];
+
+        let y = M;
+
+        // Helpers
+        const setText = (rgb) => doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+        const setFill = (rgb) => doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+        const setDraw = (rgb) => doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
+        const rule = (color, weight) => {
+          setDraw(color); doc.setLineWidth(weight);
+          doc.line(M, y, pageW - M, y);
+        };
+        const sectionTitle = (text) => {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          setText(C_ACCENT);
+          doc.text(text.toUpperCase(), M, y);
+          y += 4.5;
+        };
+
+        // ============ HEADER ============
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(24);
+        setText(C_PRIMARY);
+        doc.text('JACK BING', M, y + 7);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        setText(C_MUTED);
+        const updated = new Date().toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+        doc.text('MEDIA KIT  •  UPDATED ' + updated.toUpperCase(), M, y + 12);
+
+        // Right: contact
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        setText(C_ACCENT);
+        doc.text('management@jackbing.com', pageW - M, y + 6, { align: 'right' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        setText(C_MUTED);
+        doc.text('JACKBING.COM  •  NSW, AUSTRALIA', pageW - M, y + 11, { align: 'right' });
+
+        y += 16;
+        rule(C_ACCENT, 0.6);
+        y += 9;
+
+        // ============ TAGLINE ============
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        setText(C_PRIMARY);
+        doc.text('I create, learn, and entertain. And bring thousands of', M, y);
+        y += 5.5;
+        doc.text('people along for the ride. ', M, y);
+        // bold "Every day."
+        const textW = doc.getTextWidth('people along for the ride. ');
+        doc.setFont('helvetica', 'bold');
+        doc.text('Every day.', M + textW, y);
+        y += 12;
+
+        // ============ STATS (4 across) ============
+        const streakDays = Math.floor((new Date() - new Date('2024-08-01')) / 86400000);
+        const stats = [
+          ['10.3M+', 'Views',           'Last 12 months, YT + TikTok'],
+          ['85K',    'Monthly Viewers', 'YouTube, 30-day avg'],
+          ['65%+',   'Avg Retention',   'Top Shorts, ~2x industry'],
+          [streakDays + '+', 'Days, No Days Off', 'Daily since Aug 2024']
+        ];
+        const colW = W / 4;
+        stats.forEach((s, i) => {
+          const x = M + i * colW;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(20);
+          setText(C_PRIMARY);
+          doc.text(s[0], x, y);
+          doc.setFontSize(7);
+          setText(C_ACCENT);
+          doc.text(s[1].toUpperCase(), x, y + 4.5);
+          doc.setFont('helvetica', 'normal');
+          setText(C_MUTED);
+          doc.text(s[2], x, y + 8);
+        });
+        y += 14;
+
+        rule(C_RULE, 0.25);
+        y += 8;
+
+        // ============ AUDIENCE (3 columns w/ mini bars) ============
+        sectionTitle('Audience');
+        const audColW = W / 3;
+        const audCols = [
+          { title: 'AGE', items: [['Under 18','3'], ['18 to 24','28'], ['25 to 34','48'], ['35 to 44','15'], ['45+','6']] },
+          { title: 'GENDER', items: [['Male','74'], ['Female','26']] },
+          { title: 'TOP COUNTRIES', items: [['USA','13'], ['UK','12'], ['Australia','10'], ['Germany','6'], ['Netherlands','5']] }
+        ];
+        const audStartY = y;
+        audCols.forEach((col, idx) => {
+          const x = M + idx * audColW;
+          let cy = audStartY;
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7);
+          setText(C_MUTED);
+          doc.text(col.title, x, cy);
+          cy += 4.5;
+          col.items.forEach(item => {
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            setText(C_PRIMARY);
+            doc.text(item[0], x, cy);
+            doc.setFont('helvetica', 'bold');
+            doc.text(item[1] + '%', x + audColW - 6, cy, { align: 'right' });
+            // mini bar
+            const barW = audColW - 8;
+            const fillW = Math.min(barW * parseFloat(item[1]) / 100, barW);
+            setFill([238, 238, 238]);
+            doc.rect(x, cy + 1.2, barW, 1.1, 'F');
+            setFill(C_ACCENT);
+            doc.rect(x, cy + 1.2, fillW, 1.1, 'F');
+            cy += 6;
+          });
+        });
+        y += 36;
+
+        rule(C_RULE, 0.25);
+        y += 8;
+
+        // ============ PILLARS ============
+        sectionTitle('What I cover');
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        setText(C_PRIMARY);
+        doc.text('Geography (Learning + Challenges)  •  Gaming (Playthroughs + Reviews)', M, y);
+        y += 5;
+        doc.text('Tech (Unboxings + Reviews)  •  Cars / 300ZX (Build Series)', M, y);
+        y += 9;
+
+        // ============ BRANDS ============
+        sectionTitle("Brands I've worked with");
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        setText(C_PRIMARY);
+        doc.text('Red Bull  •  Xbox  •  Forza  •  Supercheap Auto  •  Razer  •  Fanatee  •  Trainwreck Labs', M, y);
+        y += 9;
+
+        rule(C_RULE, 0.25);
+        y += 8;
+
+        // ============ SERVICES ============
+        sectionTitle('Services');
+        const services = [
+          ['Dedicated YouTube video',      'Full sponsored long-form built around your brand.'],
+          ['YouTube integration',          'Native sponsor spot inside a regular video, organic and conversational.'],
+          ['Shortform across platforms',   'YouTube Shorts + TikTok in one. Most popular option.'],
+          ['Combination packages',         'Custom mix across formats and platforms. Best ROI per campaign.']
+        ];
+        services.forEach(s => {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9);
+          setText(C_PRIMARY);
+          doc.text('•  ' + s[0], M, y);
+          doc.setFont('helvetica', 'normal');
+          setText(C_SECONDARY);
+          doc.text(s[1], M + 55, y);
+          y += 5;
+        });
+        y += 3;
+
+        rule(C_RULE, 0.25);
+        y += 8;
+
+        // ============ PROCESS + LEAD TIME ============
+        sectionTitle('Process');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7);
+        setText(C_MUTED);
+        doc.text('1 TO 2 WEEK TURNAROUND, FASTER ON SHORTS', pageW - M, y - 4.5, { align: 'right' });
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9.5);
+        setText(C_PRIMARY);
+        doc.text('1. Get in touch     2. Creative chat     3. Production     4. Publish + report (7 & 30-day recap)', M, y);
+        y += 11;
+
+        // ============ FOOTER CTA (red bar) ============
+        setFill(C_ACCENT);
+        doc.rect(M, y, W, 13, 'F');
+        setText([255, 255, 255]);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text("Let's make something.", M + 4, y + 8.5);
+        doc.setFontSize(11);
+        doc.text('management@jackbing.com  >', pageW - M - 4, y + 8.5, { align: 'right' });
+
+        doc.save('jack-bing-media-kit.pdf');
       } catch (e) {
         console.warn('PDF generation failed', e);
         alert('Could not generate PDF. Try again or take a screenshot.');
       } finally {
-        document.body.classList.remove('pdf-export');
         btn.innerHTML = originalContent;
         btn.disabled = false;
       }
