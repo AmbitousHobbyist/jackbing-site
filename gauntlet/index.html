@@ -85,21 +85,7 @@
   .bigcard .sub{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-top:6px;white-space:nowrap}
   .bigcard .who{margin-left:auto;text-align:right;min-width:150px;flex:0 1 210px}
   .bigcard .who input{text-align:right;font-weight:700}
-  .posline{font-size:12.5px;font-weight:700;margin-top:10px;letter-spacing:.2px}
-  .posline .vs{color:var(--dim);font-weight:600}
-  .stamp{
-    position:absolute;left:50%;top:50%;pointer-events:none;
-    font-size:44px;font-weight:800;letter-spacing:2px;white-space:nowrap;
-    border:4px solid currentColor;border-radius:10px;padding:4px 16px;
-    transform:translate(-50%,-50%) rotate(-8deg) scale(2.4);opacity:0;z-index:40;
-  }
-  .stamp.go{animation:stampin 1.5s cubic-bezier(.2,1.3,.3,1) forwards}
-  @keyframes stampin{
-    0%{opacity:0;transform:translate(-50%,-50%) rotate(-8deg) scale(2.4)}
-    18%{opacity:1;transform:translate(-50%,-50%) rotate(-8deg) scale(1)}
-    75%{opacity:1}
-    100%{opacity:0;transform:translate(-50%,-50%) rotate(-8deg) scale(.96)}
-  }
+  .posline{font-size:12px;font-weight:600;margin-top:10px;letter-spacing:.2px;color:var(--dim)}
 
   .panel{background:var(--paper);border:1px solid var(--edge);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
   .panel h2{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
@@ -113,10 +99,7 @@
   .hole a.go:hover{color:var(--ink)}
   .hole .par{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
   .hole .ib{margin-left:auto}
-  .hole .info{font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--cell-edge);background:var(--cell);
-    width:22px;height:22px;border-radius:50%;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
-  .hole .rules{display:none;font-size:12px;color:var(--dim);line-height:1.5;margin:8px 0 2px 25px}
-  .hole.showrules .rules{display:block}
+  .hole .rules{font-size:11.5px;color:var(--dim);line-height:1.5;margin:5px 0 0 25px}
   .hole .r2{display:flex;align-items:center;gap:8px;margin-top:9px;padding-left:25px}
   .step{display:flex;align-items:center;gap:0;border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:#fff}
   .step button{border:none;border-radius:0;font-size:17px;width:42px;padding:8px 0;background:var(--cell)}
@@ -124,6 +107,20 @@
   .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
   .hole .clr{font-size:11px;color:var(--dim);background:none;border:none;padding:4px}
   .hole .res{margin-left:auto}
+  .wl{display:flex;gap:6px}
+  .wl button{padding:9px 18px;font-size:13px}
+  .wl button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* desktop: centred two-column clubhouse */
+  .cols{display:block}
+  @media (min-width: 940px){
+    .vwrap{max-width:1040px}
+    .cols{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+    .colR{position:sticky;top:14px}
+    .bigcard{position:static}
+    .bigcard .top .score-huge{font-size:76px}
+    .hole .r1 .nm{font-size:16px}
+  }
 
   .lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--cell-edge);font-size:14px}
   .lb-row:last-child{border-bottom:none}
@@ -265,15 +262,17 @@ async function api(fn, body){
   return t ? JSON.parse(t) : null;
 }
 
-/* golf maths */
+/* golf maths — every hole caps at double bogey (+2), the gauntlet failsafe */
 function toPar(g, score){
   if (score === null || score === undefined || score === "" || isNaN(score)) return null;
   const s = +score;
-  if (g.mode === "direct") return Math.round(s);
-  const per = +g.per || 1;
-  const raw = (s - (+g.par)) / per;
-  const v = Math.round(raw * (g.better === "high" ? -1 : 1) * 100) / 100;
-  return Math.round(v);
+  let v;
+  if (g.mode === "direct" || g.mode === "winlose") v = Math.round(s);
+  else {
+    const per = +g.per || 1;
+    v = Math.round((s - (+g.par)) / per * (g.better === "high" ? -1 : 1));
+  }
+  return Math.min(v, 2);
 }
 function fmtPar(n){ return n === 0 ? "E" : (n > 0 ? "+" + n : "" + n); }
 function stampName(n){
@@ -351,13 +350,6 @@ function lbRows(course){
   rows.sort((a,b)=> a.total-b.total || b.thru-a.thru || (a.updated<b.updated?-1:1));
   return rows;
 }
-function myRank(rows, myTotal, myThru){
-  if (myThru < 1) return null;
-  let better = 0, tied = 0;
-  for (const r of rows){ if (r.total < myTotal) better++; else if (r.total === myTotal) tied++; }
-  return { pos: better + 1, tied: tied > 1, of: rows.length };
-}
-function ordinal(n){ const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
 
 async function vFetch(){
   try{
@@ -404,50 +396,44 @@ function vRender(){
   }
   const t = roundTotals(course, V.scores);
   const rows = lbRows(course);
-  const jack = rows.find(r=>r.is_jack);
-  const rank = myRank(rows, t.total, t.thru);
   const stats = histStats();
 
   let posline = "";
-  if (t.thru < 1) posline = '<span class="vs">enter your first score to join the round</span>';
-  else if (!V.name.trim()) posline = '<span class="vs">add your name ↑ to hit the leaderboard</span>';
-  else if (rank){
-    const lead = rows.length ? rows[0].total : 0;
-    const gap = t.total - lead;
-    posline = (rank.tied?"T":"") + ordinal(rank.pos) + " of " + Math.max(rank.of, rank.pos) +
-      (rank.pos === 1 ? ' <span class="vs">· leading the clubhouse</span>'
-                      : ' <span class="vs">· ' + gap + " off the lead</span>");
-  }
-  let jackline = "";
-  if (jack && t.thru > 0 && !jack.mine){
-    const d = jack.total - t.total;
-    jackline = d > 0 ? "⛳ you’re " + d + " up on Jack" : d < 0 ? "⛳ " + (-d) + " behind Jack" : "⛳ level with Jack";
-  }
+  if (t.thru < 1) posline = "enter your first score to join the round";
+  else if (!V.name.trim()) posline = "add your name ↑ to hit the leaderboard";
 
   let holes = "";
   course.games.forEach((g,i)=>{
     const val = V.scores[g.id];
     const has = val !== undefined && val !== null && val !== "";
     const tp = toPar(g, val);
-    const parTxt = g.mode === "direct" ? "± strokes" : "par " + g.par;
+    const parTxt = g.mode === "winlose" ? "win / lose" : g.mode === "direct" ? "± strokes" : "par " + g.par;
+
+    let entry;
+    if (g.mode === "winlose"){
+      entry = '<span class="wl">' +
+        '<button data-wl="-1" data-g="' + esc(g.id) + '"' + (has && +val < 0 ? ' class="sel"' : "") + '>Win</button>' +
+        '<button data-wl="1" data-g="' + esc(g.id) + '"'  + (has && +val > 0 ? ' class="sel"' : "") + '>Loss</button>' +
+      '</span>';
+    } else {
+      entry = '<span class="step">' +
+        '<button data-m="-1" data-g="' + esc(g.id) + '">−</button>' +
+        '<input type="number" inputmode="numeric" data-g="' + esc(g.id) + '" value="' + (has ? val : "") + '" placeholder="–">' +
+        '<button data-m="1" data-g="' + esc(g.id) + '">+</button>' +
+      '</span>';
+    }
+
     holes +=
-    '<div class="hole' + (V.rulesOpen[g.id] ? " showrules" : "") + '" data-g="' + esc(g.id) + '">' +
+    '<div class="hole" data-g="' + esc(g.id) + '">' +
       '<div class="r1">' +
         '<span class="num">' + (i+1) + '</span>' +
         '<span class="nm">' + esc(g.name) + '</span>' +
         (g.link ? '<a class="go" href="' + esc(g.link) + '" target="_blank" rel="noopener">↗</a>' : "") +
-        '<span class="ib">' +
-          '<span class="par">' + parTxt + '</span> ' +
-          (g.rules ? '<button class="info" data-i="' + esc(g.id) + '">i</button>' : "") +
-        '</span>' +
+        '<span class="ib"><span class="par">' + parTxt + '</span></span>' +
       '</div>' +
       (g.rules ? '<div class="rules">' + esc(g.rules) + '</div>' : "") +
       '<div class="r2">' +
-        '<span class="step">' +
-          '<button data-m="-1" data-g="' + esc(g.id) + '">−</button>' +
-          '<input type="number" inputmode="numeric" data-g="' + esc(g.id) + '" value="' + (has ? val : "") + '" placeholder="–">' +
-          '<button data-m="1" data-g="' + esc(g.id) + '">+</button>' +
-        '</span>' +
+        entry +
         (has ? '<button class="clr" data-c="' + esc(g.id) + '">clear</button>' : "") +
         (tp !== null ? '<span class="res chip ' + parClass(tp) + '">' + stampName(tp) + '</span>' : "") +
       '</div>' +
@@ -479,58 +465,41 @@ function vRender(){
         '<div class="who"><label>your name</label>' +
           '<input id="v-name" maxlength="24" placeholder="add your name" value="' + esc(V.name) + '"></div>' +
       '</div>' +
-      '<div class="posline">' + posline + (jackline ? ' <span class="vs">·</span> ' + jackline : "") + '</div>' +
-      '<div class="stamp" id="stamp"></div>' +
+      (posline ? '<div class="posline">' + posline + '</div>' : "") +
     '</div>' +
 
-    '<div class="panel">' + '<h2>today’s course — ' + esc(course.name) + '</h2>' + holes + '</div>' +
-
-    '<div class="panel"><h2>clubhouse leaderboard</h2>' + lb +
-      '<div class="row" style="margin-top:12px"><button class="pri" id="v-share">Share my card</button>' +
-      '<span class="hint" style="margin:0">' + (V.lastErr ? esc(V.lastErr) : "updates live as everyone plays") + '</span></div></div>' +
-
-    (stats ? '<div class="foot">' +
-      (stats.streak > 1 ? '<span class="chip">🔥 ' + stats.streak + '-day streak</span>' : "") +
-      (stats.best !== null ? '<span class="chip">best round ' + fmtPar(stats.best) + '</span>' : "") +
-      (stats.birdies ? '<span class="chip">' + stats.birdies + ' lifetime birdies</span>' : "") +
-      '<span class="chip">' + stats.rounds + ' rounds played</span>' +
-    '</div>' : "") +
-
-    '<div class="credit">play along with <b>jack bing</b> · new course daily</div>' +
+    '<div class="cols">' +
+      '<div class="panel">' + '<h2>today’s course — ' + esc(course.name) + '</h2>' + holes + '</div>' +
+      '<div class="colR">' +
+        '<div class="panel"><h2>clubhouse leaderboard</h2>' + lb +
+          '<div class="row" style="margin-top:12px"><button class="pri" id="v-share">Share my card</button>' +
+          '<span class="hint" style="margin:0">' + (V.lastErr ? esc(V.lastErr) : "updates live as everyone plays") + '</span></div></div>' +
+        (stats ? '<div class="foot">' +
+          (stats.streak > 1 ? '<span class="chip">🔥 ' + stats.streak + '-day streak</span>' : "") +
+          (stats.best !== null ? '<span class="chip">best round ' + fmtPar(stats.best) + '</span>' : "") +
+          (stats.birdies ? '<span class="chip">' + stats.birdies + ' lifetime birdies</span>' : "") +
+          '<span class="chip">' + stats.rounds + ' rounds played</span>' +
+        '</div>' : "") +
+        '<div class="credit">play along with <b>jack bing</b> · new course daily</div>' +
+      '</div>' +
+    '</div>' +
   '</div>';
 
   vWire(course);
 }
 
-function vStamp(tp){
-  const el = document.getElementById("stamp");
-  if (!el || tp === null) return;
-  el.textContent = stampName(tp);
-  el.style.color = tp < 0 ? "#b8860b" : tp === 0 ? "var(--ink)" : "var(--red)";
-  el.classList.remove("go");
-  void el.offsetWidth;
-  el.classList.add("go");
-}
-
-function vSet(course, gid, val, stamp){
+function vSet(course, gid, val){
   if (val === "" || val === null || isNaN(val)) delete V.scores[gid];
   else V.scores[gid] = +val;
   vSaveScores();
   vQueueSubmit();
   vRender();
-  if (stamp){
-    const g = course.games.find(x=>x.id===gid);
-    vStamp(toPar(g, V.scores[gid]));
-  }
 }
 
 function vWire(course){
   const nameEl = document.getElementById("v-name");
   nameEl.onchange = ()=>{ V.name = nameEl.value.trim(); localStorage.setItem(LS.name, V.name); vQueueSubmit(); vRender(); };
 
-  document.querySelectorAll(".info").forEach(b=>{
-    b.onclick = ()=>{ const id=b.dataset.i; V.rulesOpen[id]=!V.rulesOpen[id]; vRender(); };
-  });
   document.querySelectorAll(".step button").forEach(b=>{
     b.onclick = ()=>{
       const gid = b.dataset.g, m = +b.dataset.m;
@@ -539,17 +508,23 @@ function vWire(course){
       let step = 1;
       if (g.mode !== "direct" && +g.per >= 100) step = Math.max(100, Math.round(+g.per/4));
       let nv;
-      if (cur === undefined) nv = g.mode === "direct" ? m : +g.par + (m>0?0:0) || +g.par;
+      if (cur === undefined) nv = g.mode === "direct" ? m : +g.par;
       else nv = +cur + m*step;
       if (g.mode !== "direct" && nv < 0) nv = 0;
-      vSet(course, gid, nv, true);
+      vSet(course, gid, nv);
     };
   });
   document.querySelectorAll(".step input").forEach(inp=>{
-    inp.onchange = ()=> vSet(course, inp.dataset.g, inp.value === "" ? "" : +inp.value, true);
+    inp.onchange = ()=> vSet(course, inp.dataset.g, inp.value === "" ? "" : +inp.value);
+  });
+  document.querySelectorAll(".wl button").forEach(b=>{
+    b.onclick = ()=>{
+      const gid = b.dataset.g, v = +b.dataset.wl;
+      vSet(course, gid, V.scores[gid] === v ? "" : v); /* tap again to clear */
+    };
   });
   document.querySelectorAll(".clr").forEach(b=>{
-    b.onclick = ()=> vSet(course, b.dataset.c, "", false);
+    b.onclick = ()=> vSet(course, b.dataset.c, "");
   });
   document.getElementById("v-share").onclick = async ()=>{
     const txt = shareText(course);
@@ -736,7 +711,9 @@ function cState(){
     games: course.games.map((g,i)=>{
       const v = C.scores[g.id];
       const has = v!==undefined && v!==null && v!=="";
-      return { name:g.name, parTxt:(g.mode==="direct"?"±":"par "+g.par), score: has? v : null, tp: toPar(g,v) };
+      const parTxt = g.mode==="winlose" ? "w / l" : g.mode==="direct" ? "±" : "par "+g.par;
+      const scoreDisp = !has ? null : g.mode==="winlose" ? (+v<0?"W":"L") : v;
+      return { name:g.name, parTxt:parTxt, score:scoreDisp, tp: toPar(g,v) };
     }),
     total:t.total, thru:t.thru, ts:Date.now(), by:CLIENT
   });
@@ -770,10 +747,11 @@ async function cFetchCfg(){
 }
 async function cSaveCfg(){
   localStorage.setItem(LS.cfg, JSON.stringify(C.cfg));
+  cPublish(); /* overlay picks up course edits instantly, same moment as viewers */
   if(!C.admin){ C.status="saved locally — add admin key to publish for viewers"; cRender(); return; }
   try{
     await api("gauntlet_save_config",{ p_key:C.admin, p_data:C.cfg });
-    C.status="published to viewers ✓";
+    C.status="published — overlay + viewer site updated ✓";
   }catch(e){ C.status="publish failed — check admin key"; }
   cRender();
 }
@@ -790,15 +768,24 @@ function cRender(){
     const v=C.scores[g.id];
     const has=v!==undefined&&v!==null&&v!=="";
     const tp=toPar(g,v);
-    holes += '<div class="crow">'+
-      '<span class="num" style="width:16px;font-size:11px;font-weight:700;color:var(--dim);text-align:center">'+(i+1)+'</span>'+
-      '<span class="nm">'+esc(g.name)+'</span>'+
-      '<span class="par">'+(g.mode==="direct"?"±":"par "+g.par)+'</span>'+
-      '<span class="step">'+
+    let entry;
+    if(g.mode==="winlose"){
+      entry = '<span class="wl">'+
+        '<button data-wl="-1" data-g="'+esc(g.id)+'"'+(has&&+v<0?' class="sel"':"")+'>Win</button>'+
+        '<button data-wl="1" data-g="'+esc(g.id)+'"'+(has&&+v>0?' class="sel"':"")+'>Loss</button>'+
+      '</span>';
+    }else{
+      entry = '<span class="step">'+
         '<button data-m="-1" data-g="'+esc(g.id)+'">−</button>'+
         '<input type="number" inputmode="numeric" data-g="'+esc(g.id)+'" value="'+(has?v:"")+'" placeholder="–">'+
         '<button data-m="1" data-g="'+esc(g.id)+'">+</button>'+
-      '</span>'+
+      '</span>';
+    }
+    holes += '<div class="crow">'+
+      '<span class="num" style="width:16px;font-size:11px;font-weight:700;color:var(--dim);text-align:center">'+(i+1)+'</span>'+
+      '<span class="nm">'+esc(g.name)+'</span>'+
+      '<span class="par">'+(g.mode==="winlose"?"w / l":g.mode==="direct"?"±":"par "+g.par)+'</span>'+
+      entry+
       (tp!==null?'<span class="chip '+parClass(tp)+'" style="width:56px;text-align:center">'+fmtPar(tp)+'</span>'
                 :'<span class="chip" style="width:56px;text-align:center;opacity:.35">–</span>')+
     '</div>';
@@ -815,7 +802,8 @@ function cRender(){
           '<option value="low"'+(g.better!=="high"?" selected":"")+'>low wins</option>'+
           '<option value="high"'+(g.better==="high"?" selected":"")+'>high wins</option></select>'+
         '<select class="g-sel" data-f="mode" data-gi="'+i+'" title="scoring mode">'+
-          '<option value="normal"'+(g.mode!=="direct"?" selected":"")+'>vs par</option>'+
+          '<option value="normal"'+(g.mode!=="direct"&&g.mode!=="winlose"?" selected":"")+'>vs par</option>'+
+          '<option value="winlose"'+(g.mode==="winlose"?" selected":"")+'>win / lose</option>'+
           '<option value="direct"'+(g.mode==="direct"?" selected":"")+'>± direct</option></select>'+
       '</div>'+
       '<div class="row"><input class="g-rules" data-f="rules" data-gi="'+i+'" value="'+esc(g.rules||"")+'" placeholder="rules shown behind the (i)"></div>'+
@@ -886,7 +874,7 @@ function cRender(){
           '<button id="b-newc">New course</button>'+
           '<button class="warn" id="b-delc">Delete course</button>'+
         '</div>'+
-        '<div class="hint">Publishing updates the viewer page instantly — edit games any time. <b>par</b> = target. <b>per</b> = units per stroke (Globle 2, GeoGuessr 2000). <b>high wins</b> for points games. <b>± direct</b> = the entered number IS the strokes (win/loss games).</div>'+
+        '<div class="hint">Publishing updates the overlay + viewer page together, instantly. <b>par</b> = target. <b>per</b> = units per stroke (Globle 2, GeoGuessr 2000). <b>high wins</b> for points games. <b>win / lose</b> = two buttons, win −1 loss +1. <b>± direct</b> = the entered number IS the strokes. Every hole caps at double bogey (+2).</div>'+
       '</div>'+
     '</div>'+
   '</div>';
@@ -942,6 +930,12 @@ function cWire(course, ed){
   });
   document.querySelectorAll(".crow .step input").forEach(inp=>{
     inp.onchange=()=> cSet(inp.dataset.g, inp.value===""?"":+inp.value);
+  });
+  document.querySelectorAll(".crow .wl button").forEach(b=>{
+    b.onclick=()=>{
+      const gid=b.dataset.g, v=+b.dataset.wl;
+      cSet(gid, C.scores[gid]===v ? "" : v);
+    };
   });
 
   $("b-clear").onclick=()=>{ C.scores={}; localStorage.setItem(cScoresKey(),"{}"); cPublish(); cQueueLeaderboard(); cRender(); };
