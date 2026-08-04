@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>daily game gauntlet — jack bing</title>
+<meta name="description" content="Play the daily game gauntlet along with Jack Bing — 9 daily games, golf scoring, live leaderboard.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛳</text></svg>">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --paper:#ffffff; --ink:#101014; --dim:#8e8e98;
+    --cell:#f5f5f7; --cell-edge:#e6e6ea;
+    --gold:#ffc53d; --gold-txt:#201800; --red:#c93a3a;
+    --bg:#ececef; --edge:rgba(0,0,0,.11);
+    --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+  html,body{height:100%}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+  .tab{
+    display:inline-block;position:relative;margin-left:26px;margin-bottom:-1px;
+    padding:10px 22px 12px;background:var(--paper);color:var(--ink);
+    border:1px solid var(--edge);border-bottom:none;
+    font-weight:700;font-size:15px;line-height:1;letter-spacing:-.3px;text-transform:lowercase;
+    border-radius:14px 14px 0 0;z-index:2;
+  }
+  .tab::after{content:"";position:absolute;left:1px;right:1px;bottom:-2px;height:4px;background:var(--paper)}
+
+  .card{
+    position:relative;background:var(--paper);border:1px solid var(--edge);
+    border-radius:24px;padding:20px;
+    box-shadow:0 24px 60px rgba(0,0,0,.30),0 4px 14px rgba(0,0,0,.10);
+  }
+
+  button{
+    font-family:var(--sans);font-size:12.5px;font-weight:700;letter-spacing:.2px;
+    color:var(--ink);background:var(--paper);border:1px solid var(--edge);
+    padding:10px 14px;border-radius:12px;cursor:pointer;
+    transition:background .15s,border-color .15s,transform .1s;
+  }
+  button:hover{background:#f2f2f4;border-color:#bdbdc6}
+  button:active{transform:translateY(1px)}
+  button.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button.pri:hover{background:#2c2c33}
+  button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button.warn{color:var(--red)}
+  input,select,textarea{
+    font-family:var(--sans);font-size:13px;color:var(--ink);
+    background:#f6f6f8;border:1px solid var(--edge);border-radius:12px;
+    padding:10px 12px;outline:none;width:100%;
+  }
+  input:focus,select:focus,textarea:focus{border-color:#9a9aa6}
+  select{appearance:none;cursor:pointer}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}
+  input[type="range"]{padding:0;height:26px;background:transparent;border:none;accent-color:var(--ink)}
+  input[type="checkbox"]{width:auto;accent-color:var(--ink)}
+  label{display:block;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin:14px 0 6px}
+  label:first-child{margin-top:0}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .hint{font-size:11.5px;color:var(--dim);line-height:1.5;margin-top:10px}
+  .hint b{color:#4c4c55}
+
+  .chip{
+    display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;background:var(--cell);border:1px solid var(--cell-edge);color:var(--dim);
+    white-space:nowrap;
+  }
+  .chip.under{background:var(--gold);border-color:var(--gold);color:var(--gold-txt)}
+  .chip.even{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip.over{background:var(--red);border-color:var(--red);color:#fff}
+
+  /* ═════════ VIEWER ═════════ */
+  body.viewer{background:var(--bg);overflow-y:auto;padding:18px 14px 60px}
+  .vwrap{max-width:600px;margin:0 auto}
+  .vhead{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:0}
+  .vhead .meta{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);padding-bottom:10px}
+
+  .bigcard{position:sticky;top:10px;z-index:30;margin-bottom:16px;overflow:hidden}
+  .bigcard .top{display:flex;align-items:center;gap:14px}
+  .score-huge{font-size:64px;font-weight:700;letter-spacing:-3px;line-height:.95}
+  .score-huge.under{color:#b8860b}
+  .score-huge.over{color:var(--red)}
+  .score-huge.empty{color:var(--cell-edge)}
+  .bigcard .sub{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-top:6px;white-space:nowrap}
+  .bigcard .who{margin-left:auto;text-align:right;min-width:150px;flex:0 1 210px}
+  .bigcard .who input{text-align:right;font-weight:700}
+  .posline{font-size:12.5px;font-weight:700;margin-top:10px;letter-spacing:.2px}
+  .posline .vs{color:var(--dim);font-weight:600}
+  .stamp{
+    position:absolute;left:50%;top:50%;pointer-events:none;
+    font-size:44px;font-weight:800;letter-spacing:2px;white-space:nowrap;
+    border:4px solid currentColor;border-radius:10px;padding:4px 16px;
+    transform:translate(-50%,-50%) rotate(-8deg) scale(2.4);opacity:0;z-index:40;
+  }
+  .stamp.go{animation:stampin 1.5s cubic-bezier(.2,1.3,.3,1) forwards}
+  @keyframes stampin{
+    0%{opacity:0;transform:translate(-50%,-50%) rotate(-8deg) scale(2.4)}
+    18%{opacity:1;transform:translate(-50%,-50%) rotate(-8deg) scale(1)}
+    75%{opacity:1}
+    100%{opacity:0;transform:translate(-50%,-50%) rotate(-8deg) scale(.96)}
+  }
+
+  .panel{background:var(--paper);border:1px solid var(--edge);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  .panel h2{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+
+  .hole{border-bottom:1px solid var(--cell-edge);padding:11px 2px}
+  .hole:last-child{border-bottom:none}
+  .hole .r1{display:flex;align-items:center;gap:9px}
+  .hole .num{font-size:11px;font-weight:700;color:var(--dim);width:16px;text-align:center}
+  .hole .nm{font-weight:700;font-size:15px;letter-spacing:-.2px}
+  .hole a.go{color:var(--dim);text-decoration:none;font-size:13px;padding:2px 4px}
+  .hole a.go:hover{color:var(--ink)}
+  .hole .par{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
+  .hole .ib{margin-left:auto}
+  .hole .info{font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--cell-edge);background:var(--cell);
+    width:22px;height:22px;border-radius:50%;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}
+  .hole .rules{display:none;font-size:12px;color:var(--dim);line-height:1.5;margin:8px 0 2px 25px}
+  .hole.showrules .rules{display:block}
+  .hole .r2{display:flex;align-items:center;gap:8px;margin-top:9px;padding-left:25px}
+  .step{display:flex;align-items:center;gap:0;border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:#fff}
+  .step button{border:none;border-radius:0;font-size:17px;width:42px;padding:8px 0;background:var(--cell)}
+  .step input{width:76px;border:none;border-radius:0;text-align:center;font-weight:700;font-size:16px;background:#fff;padding:8px 4px}
+  .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .hole .clr{font-size:11px;color:var(--dim);background:none;border:none;padding:4px}
+  .hole .res{margin-left:auto}
+
+  .lb-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--cell-edge);font-size:14px}
+  .lb-row:last-child{border-bottom:none}
+  .lb-row .pos{width:38px;font-weight:700;color:var(--dim);font-size:12px}
+  .lb-row .nm{font-weight:700;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lb-row .thru{margin-left:auto;font-size:11px;color:var(--dim);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+  .lb-row.me{background:#fffaea;border-radius:10px}
+  .lb-row .jb{display:inline-block;background:var(--ink);color:#fff;font-size:9px;font-weight:700;
+    letter-spacing:.4px;padding:3px 7px;border-radius:6px;text-transform:lowercase;margin-left:7px;vertical-align:1px}
+  .lb-row.first .pos{color:#b8860b}
+
+  .foot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+  .foot .chip{font-size:11px;padding:7px 12px}
+  .credit{text-align:center;margin-top:22px;font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.3px}
+  .credit b{letter-spacing:-.2px}
+
+  /* ═════════ OVERLAY ═════════ */
+  body.overlay{background:transparent;overflow:hidden}
+  body.overlay.preview{background:#26262b}
+  .board{
+    position:fixed;width:max-content;will-change:transform,left,top;cursor:grab;
+    transition:left .45s cubic-bezier(.2,.8,.2,1),top .45s cubic-bezier(.2,.8,.2,1),
+      transform .55s cubic-bezier(.25,.9,.25,1),opacity .45s ease;
+  }
+  .board.noanim{transition:opacity .45s ease}
+  .board.hidden{opacity:0;pointer-events:none}
+  .ocard{width:460px;padding:18px 18px 14px}
+  .ohead{display:flex;align-items:baseline;gap:10px;padding:0 4px 10px}
+  .ohead .t{font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim)}
+  .ohead .d{margin-left:auto;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
+  .orow{display:flex;align-items:center;gap:10px;padding:7.5px 4px;border-bottom:1px solid var(--cell-edge)}
+  .orow .n{font-size:11px;font-weight:700;color:var(--dim);width:14px;text-align:center}
+  .orow .g{font-weight:700;font-size:16.5px;letter-spacing:-.3px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .orow .p{font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--dim);text-transform:uppercase;width:64px;text-align:right}
+  .orow .s{font-weight:700;font-size:16.5px;width:58px;text-align:right;font-variant-numeric:tabular-nums}
+  .orow .s.dot{color:var(--cell-edge)}
+  .orow .chip{width:52px;text-align:center}
+  .ofoot{display:flex;align-items:center;gap:12px;padding:12px 4px 0}
+  .ofoot .lbl{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+  .ofoot .tot{margin-left:auto;font-size:40px;font-weight:700;letter-spacing:-2px;line-height:1}
+  .ofoot .tot.under{color:#b8860b}
+  .ofoot .tot.over{color:var(--red)}
+  .ofoot .thru{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
+
+  /* ═════════ CONTROL ═════════ */
+  body.control{background:var(--bg);overflow-y:auto;padding:24px}
+  .wrap{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;max-width:1240px;margin:0 auto}
+  .col-a{flex:1 1 500px;min-width:340px}
+  .col-b{flex:0 1 430px;min-width:330px}
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .bar .tab{margin:0;border-radius:12px;border-bottom:1px solid var(--edge);padding:9px 18px 10px}
+  .bar .tab::after{display:none}
+  .bar .who{font-size:12px;color:var(--dim);font-weight:700}
+  .net{display:flex;align-items:center;gap:7px;margin-left:auto;font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+  .dot{width:8px;height:8px;border-radius:50%;background:#c3c3ca}
+  .dot.live{background:#23b45f;box-shadow:0 0 0 4px rgba(35,180,95,.16)}
+  .dot.wait{background:#e5a400}
+  .dot.err{background:var(--red)}
+  .crow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--cell-edge)}
+  .crow:last-child{border-bottom:none}
+  .crow .nm{font-weight:700;font-size:14.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .crow .par{font-size:10.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;width:62px;text-align:right}
+  .ctot{display:flex;align-items:center;gap:12px;padding:12px 2px 2px}
+  .ctot .tot{font-size:34px;font-weight:700;letter-spacing:-1.5px;margin-left:auto}
+  .ctot .tot.under{color:#b8860b}
+  .ctot .tot.over{color:var(--red)}
+  .stage16{position:relative;aspect-ratio:16/9;border-radius:14px;background:#212126;border:1px solid var(--edge);overflow:hidden;touch-action:none;cursor:crosshair}
+  .ghost{position:absolute;transform:translate(-50%,-50%);background:#fff;border-radius:8%/10%;
+    font-size:8px;font-weight:700;color:var(--ink);padding:5% 7%;box-shadow:0 6px 18px rgba(0,0,0,.5);cursor:grab;touch-action:none}
+  .ghost.big{outline:2px solid var(--gold)}
+  .ged{border:1px solid var(--cell-edge);border-radius:14px;padding:10px;margin-bottom:10px;background:#fbfbfc}
+  .ged .row{margin-bottom:6px}
+  .ged input,.ged select{padding:7px 9px;font-size:12px;border-radius:9px}
+  .ged .g-name{flex:2 1 120px}
+  .ged .g-par{flex:0 0 64px}
+  .ged .g-per{flex:0 0 64px}
+  .ged .g-sel{flex:0 0 92px;width:92px}
+  .ged .g-rules{flex:1 1 100%}
+  .ged .g-link{flex:1 1 100%}
+  .ged .mini-b{padding:6px 9px;font-size:11px;border-radius:9px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   daily game gauntlet — jackbing.com/gauntlet
+   ───────────────────────────────────────────────────────────────
+   (default)              → viewer play-along + live leaderboard
+   ?overlay&room=CODE     → OBS overlay of Jack's scorecard
+   ?control&room=CODE     → Jack's control panel + course editor
+   ?preview               → overlay on dark backdrop
+   ═══════════════════════════════════════════════════════════════ */
+
+const SB_URL = "https://jkwkinzaolddpmkztpbr.supabase.co";
+const SB_KEY = "sb_publishable_fCMmsy1YOJRr6c3P9oUVkg_amHSYEEW";
+
+const P = new URLSearchParams(location.search);
+const MODE = P.has("control") ? "control" : P.has("overlay") ? "overlay" : "viewer";
+const PREVIEW = P.has("preview");
+const CLIENT = Math.random().toString(36).slice(2, 10);
+
+const LS = {
+  token:"gg_token", name:"gg_name", hist:"gg_hist", room:"gg_room",
+  admin:"gg_admin", cfg:"gg_cfg_cache", ov:"gg_ov_state", ctlname:"gg_ctl_name"
+};
+
+function uuid(){
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0; return (c==="x"?r:(r&3|8)).toString(16);
+  });
+}
+let TOKEN = localStorage.getItem(LS.token);
+if (!TOKEN) { TOKEN = uuid(); localStorage.setItem(LS.token, TOKEN); }
+/* separate identity for the control panel so Jack's leaderboard row never
+   collides with viewer-mode play in the same browser */
+let TOKEN_ADMIN = localStorage.getItem("gg_token_admin");
+if (!TOKEN_ADMIN) { TOKEN_ADMIN = uuid(); localStorage.setItem("gg_token_admin", TOKEN_ADMIN); }
+
+function today(){
+  return new Intl.DateTimeFormat("en-CA",{timeZone:"Australia/Sydney"}).format(new Date());
+}
+function dayLabel(d){
+  const [y,m,dd] = d.split("-");
+  const months=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+  return (+dd) + " " + months[+m-1];
+}
+
+async function api(fn, body){
+  const res = await fetch(SB_URL + "/rest/v1/rpc/" + fn, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json", "apikey":SB_KEY, "Authorization":"Bearer "+SB_KEY },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(await res.text().catch(()=> "api error"));
+  const t = await res.text();
+  return t ? JSON.parse(t) : null;
+}
+
+/* golf maths */
+function toPar(g, score){
+  if (score === null || score === undefined || score === "" || isNaN(score)) return null;
+  const s = +score;
+  if (g.mode === "direct") return Math.round(s);
+  const per = +g.per || 1;
+  const raw = (s - (+g.par)) / per;
+  const v = Math.round(raw * (g.better === "high" ? -1 : 1) * 100) / 100;
+  return Math.round(v);
+}
+function fmtPar(n){ return n === 0 ? "E" : (n > 0 ? "+" + n : "" + n); }
+function stampName(n){
+  if (n <= -4) return n + "!!";
+  if (n === -3) return "ALBATROSS";
+  if (n === -2) return "EAGLE";
+  if (n === -1) return "BIRDIE";
+  if (n === 0)  return "PAR";
+  if (n === 1)  return "BOGEY";
+  if (n === 2)  return "DOUBLE BOGEY";
+  if (n === 3)  return "TRIPLE BOGEY";
+  return "+" + n;
+}
+function parClass(n){ return n < 0 ? "under" : n === 0 ? "even" : "over"; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function activeCourse(cfg){
+  if (!cfg || !cfg.courses || !cfg.courses.length) return null;
+  return cfg.courses.find(c=>c.id===cfg.activeCourse) || cfg.courses[0];
+}
+function roundTotals(course, scores){
+  let total=0, thru=0, birdies=0;
+  const per=[];
+  for (const g of course.games){
+    const tp = toPar(g, scores[g.id]);
+    per.push(tp);
+    if (tp !== null){ total+=tp; thru++; if (tp<0) birdies++; }
+  }
+  return { total, thru, birdies, per };
+}
+
+/* ═══════════════ VIEWER ═══════════════ */
+const V = {
+  cfg:null, board:[], day:today(),
+  name: localStorage.getItem(LS.name) || "",
+  scores:{}, rulesOpen:{}, pollT:null, subT:null, stampT:null, lastErr:""
+};
+function vScoresKey(){ return "gg_scores_" + V.day; }
+function vLoadScores(){ try{ V.scores = JSON.parse(localStorage.getItem(vScoresKey())) || {}; }catch(e){ V.scores={}; } }
+function vSaveScores(){ localStorage.setItem(vScoresKey(), JSON.stringify(V.scores)); }
+
+function histLoad(){ try{ return JSON.parse(localStorage.getItem(LS.hist)) || {}; }catch(e){ return {}; } }
+function histSave(course){
+  const h = histLoad();
+  const t = roundTotals(course, V.scores);
+  if (t.thru > 0) h[V.day] = { total:t.total, thru:t.thru, birdies:t.birdies, holes:course.games.length };
+  localStorage.setItem(LS.hist, JSON.stringify(h));
+}
+function histStats(){
+  const h = histLoad();
+  const days = Object.keys(h).sort();
+  if (!days.length) return null;
+  // streak: consecutive days ending today or yesterday
+  let streak = 0;
+  let d = new Date(V.day + "T12:00:00");
+  if (!h[V.day]) d.setDate(d.getDate()-1);
+  while (true){
+    const key = d.toISOString().slice(0,10);
+    if (h[key]) { streak++; d.setDate(d.getDate()-1); } else break;
+  }
+  let best = null, birdies = 0;
+  for (const k of days){
+    birdies += h[k].birdies || 0;
+    if (h[k].thru >= (h[k].holes || 9) && (best === null || h[k].total < best)) best = h[k].total;
+  }
+  return { streak, best, birdies, rounds: days.length };
+}
+
+function lbRows(course){
+  const rows = [];
+  for (const r of V.board){
+    const t = roundTotals(course, r.scores || {});
+    if (t.thru > 0) rows.push({ name:r.name, is_jack:r.is_jack, total:t.total, thru:t.thru, updated:r.updated_at });
+  }
+  rows.sort((a,b)=> a.total-b.total || b.thru-a.thru || (a.updated<b.updated?-1:1));
+  return rows;
+}
+function myRank(rows, myTotal, myThru){
+  if (myThru < 1) return null;
+  let better = 0, tied = 0;
+  for (const r of rows){ if (r.total < myTotal) better++; else if (r.total === myTotal) tied++; }
+  return { pos: better + 1, tied: tied > 1, of: rows.length };
+}
+function ordinal(n){ const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
+
+async function vFetch(){
+  try{
+    const d = today();
+    if (d !== V.day){ V.day = d; vLoadScores(); }
+    const out = await api("gauntlet_get", { p_day: V.day });
+    V.cfg = out.config || V.cfg;
+    if (V.cfg) localStorage.setItem(LS.cfg, JSON.stringify(V.cfg));
+    V.board = out.board || [];
+    V.lastErr = "";
+  }catch(e){ V.lastErr = "offline — scores saved on this device"; }
+  vRender();
+}
+function vQueueSubmit(){
+  clearTimeout(V.subT);
+  V.subT = setTimeout(async ()=>{
+    const course = activeCourse(V.cfg);
+    if (course) histSave(course);
+    if (!V.name.trim()) return;
+    try{
+      await api("gauntlet_submit", { p_day:V.day, p_token:TOKEN, p_name:V.name.trim(), p_scores:V.scores });
+      // optimistic: refresh board soon after
+      setTimeout(vFetch, 700);
+    }catch(e){ /* keep local */ }
+  }, 700);
+}
+
+function shareText(course){
+  const t = roundTotals(course, V.scores);
+  const em = t.per.map(tp => tp===null ? "▫️" : tp<0 ? "🟢" : tp===0 ? "⚪" : tp===1 ? "🟠" : "🔴").join("");
+  const who = V.name.trim() ? V.name.trim() + " · " : "";
+  return "⛳ daily game gauntlet — " + dayLabel(V.day) + "\n" +
+         course.name + " · " + who + fmtPar(t.total) + " thru " + t.thru + "\n" +
+         em + "\njackbing.com/gauntlet";
+}
+
+function vRender(){
+  const app = document.getElementById("app");
+  const course = activeCourse(V.cfg);
+  if (!course){
+    app.innerHTML = '<div class="vwrap"><div class="tab">daily game gauntlet</div><div class="card">' +
+      '<div class="hint">' + (V.lastErr || "loading today’s course…") + '</div></div></div>';
+    return;
+  }
+  const t = roundTotals(course, V.scores);
+  const rows = lbRows(course);
+  const jack = rows.find(r=>r.is_jack);
+  const rank = myRank(rows, t.total, t.thru);
+  const stats = histStats();
+
+  let posline = "";
+  if (t.thru < 1) posline = '<span class="vs">enter your first score to join the round</span>';
+  else if (!V.name.trim()) posline = '<span class="vs">add your name ↑ to hit the leaderboard</span>';
+  else if (rank){
+    const lead = rows.length ? rows[0].total : 0;
+    const gap = t.total - lead;
+    posline = (rank.tied?"T":"") + ordinal(rank.pos) + " of " + Math.max(rank.of, rank.pos) +
+      (rank.pos === 1 ? ' <span class="vs">· leading the clubhouse</span>'
+                      : ' <span class="vs">· ' + gap + " off the lead</span>");
+  }
+  let jackline = "";
+  if (jack && t.thru > 0 && !jack.mine){
+    const d = jack.total - t.total;
+    jackline = d > 0 ? "⛳ you’re " + d + " up on Jack" : d < 0 ? "⛳ " + (-d) + " behind Jack" : "⛳ level with Jack";
+  }
+
+  let holes = "";
+  course.games.forEach((g,i)=>{
+    const val = V.scores[g.id];
+    const has = val !== undefined && val !== null && val !== "";
+    const tp = toPar(g, val);
+    const parTxt = g.mode === "direct" ? "± strokes" : "par " + g.par;
+    holes +=
+    '<div class="hole' + (V.rulesOpen[g.id] ? " showrules" : "") + '" data-g="' + esc(g.id) + '">' +
+      '<div class="r1">' +
+        '<span class="num">' + (i+1) + '</span>' +
+        '<span class="nm">' + esc(g.name) + '</span>' +
+        (g.link ? '<a class="go" href="' + esc(g.link) + '" target="_blank" rel="noopener">↗</a>' : "") +
+        '<span class="ib">' +
+          '<span class="par">' + parTxt + '</span> ' +
+          (g.rules ? '<button class="info" data-i="' + esc(g.id) + '">i</button>' : "") +
+        '</span>' +
+      '</div>' +
+      (g.rules ? '<div class="rules">' + esc(g.rules) + '</div>' : "") +
+      '<div class="r2">' +
+        '<span class="step">' +
+          '<button data-m="-1" data-g="' + esc(g.id) + '">−</button>' +
+          '<input type="number" inputmode="numeric" data-g="' + esc(g.id) + '" value="' + (has ? val : "") + '" placeholder="–">' +
+          '<button data-m="1" data-g="' + esc(g.id) + '">+</button>' +
+        '</span>' +
+        (has ? '<button class="clr" data-c="' + esc(g.id) + '">clear</button>' : "") +
+        (tp !== null ? '<span class="res chip ' + parClass(tp) + '">' + stampName(tp) + '</span>' : "") +
+      '</div>' +
+    '</div>';
+  });
+
+  let lb = "";
+  const myName = V.name.trim();
+  rows.slice(0, 25).forEach((r,i)=>{
+    const me = myName && r.name === myName && !r.is_jack;
+    lb += '<div class="lb-row' + (me ? " me" : "") + (i===0 ? " first" : "") + '">' +
+      '<span class="pos">' + (i+1) + '</span>' +
+      '<span class="nm">' + esc(r.name) + (r.is_jack ? '<span class="jb">jack bing</span>' : "") + '</span>' +
+      '<span class="thru">thru ' + r.thru + '</span>' +
+      '<span class="chip ' + parClass(r.total) + '" style="width:52px;text-align:center">' + fmtPar(r.total) + '</span>' +
+    '</div>';
+  });
+  if (!rows.length) lb = '<div class="hint">nobody’s posted a score yet today — be first on the tee.</div>';
+
+  app.innerHTML =
+  '<div class="vwrap">' +
+    '<div class="vhead"><div class="tab">daily game gauntlet</div>' +
+      '<div class="meta">' + esc(course.name) + ' · ' + dayLabel(V.day) + '</div></div>' +
+
+    '<div class="card bigcard">' +
+      '<div class="top">' +
+        '<div><div class="score-huge ' + (t.thru ? parClass(t.total) : "empty") + '">' + (t.thru ? fmtPar(t.total) : "E") + '</div>' +
+        '<div class="sub">thru ' + t.thru + " of " + course.games.length + '</div></div>' +
+        '<div class="who"><label>your name</label>' +
+          '<input id="v-name" maxlength="24" placeholder="add your name" value="' + esc(V.name) + '"></div>' +
+      '</div>' +
+      '<div class="posline">' + posline + (jackline ? ' <span class="vs">·</span> ' + jackline : "") + '</div>' +
+      '<div class="stamp" id="stamp"></div>' +
+    '</div>' +
+
+    '<div class="panel">' + '<h2>today’s course — ' + esc(course.name) + '</h2>' + holes + '</div>' +
+
+    '<div class="panel"><h2>clubhouse leaderboard</h2>' + lb +
+      '<div class="row" style="margin-top:12px"><button class="pri" id="v-share">Share my card</button>' +
+      '<span class="hint" style="margin:0">' + (V.lastErr ? esc(V.lastErr) : "updates live as everyone plays") + '</span></div></div>' +
+
+    (stats ? '<div class="foot">' +
+      (stats.streak > 1 ? '<span class="chip">🔥 ' + stats.streak + '-day streak</span>' : "") +
+      (stats.best !== null ? '<span class="chip">best round ' + fmtPar(stats.best) + '</span>' : "") +
+      (stats.birdies ? '<span class="chip">' + stats.birdies + ' lifetime birdies</span>' : "") +
+      '<span class="chip">' + stats.rounds + ' rounds played</span>' +
+    '</div>' : "") +
+
+    '<div class="credit">play along with <b>jack bing</b> · new course daily</div>' +
+  '</div>';
+
+  vWire(course);
+}
+
+function vStamp(tp){
+  const el = document.getElementById("stamp");
+  if (!el || tp === null) return;
+  el.textContent = stampName(tp);
+  el.style.color = tp < 0 ? "#b8860b" : tp === 0 ? "var(--ink)" : "var(--red)";
+  el.classList.remove("go");
+  void el.offsetWidth;
+  el.classList.add("go");
+}
+
+function vSet(course, gid, val, stamp){
+  if (val === "" || val === null || isNaN(val)) delete V.scores[gid];
+  else V.scores[gid] = +val;
+  vSaveScores();
+  vQueueSubmit();
+  vRender();
+  if (stamp){
+    const g = course.games.find(x=>x.id===gid);
+    vStamp(toPar(g, V.scores[gid]));
+  }
+}
+
+function vWire(course){
+  const nameEl = document.getElementById("v-name");
+  nameEl.onchange = ()=>{ V.name = nameEl.value.trim(); localStorage.setItem(LS.name, V.name); vQueueSubmit(); vRender(); };
+
+  document.querySelectorAll(".info").forEach(b=>{
+    b.onclick = ()=>{ const id=b.dataset.i; V.rulesOpen[id]=!V.rulesOpen[id]; vRender(); };
+  });
+  document.querySelectorAll(".step button").forEach(b=>{
+    b.onclick = ()=>{
+      const gid = b.dataset.g, m = +b.dataset.m;
+      const g = course.games.find(x=>x.id===gid);
+      const cur = V.scores[gid];
+      let step = 1;
+      if (g.mode !== "direct" && +g.per >= 100) step = Math.max(100, Math.round(+g.per/4));
+      let nv;
+      if (cur === undefined) nv = g.mode === "direct" ? m : +g.par + (m>0?0:0) || +g.par;
+      else nv = +cur + m*step;
+      if (g.mode !== "direct" && nv < 0) nv = 0;
+      vSet(course, gid, nv, true);
+    };
+  });
+  document.querySelectorAll(".step input").forEach(inp=>{
+    inp.onchange = ()=> vSet(course, inp.dataset.g, inp.value === "" ? "" : +inp.value, true);
+  });
+  document.querySelectorAll(".clr").forEach(b=>{
+    b.onclick = ()=> vSet(course, b.dataset.c, "", false);
+  });
+  document.getElementById("v-share").onclick = async ()=>{
+    const txt = shareText(course);
+    try{ await navigator.clipboard.writeText(txt); }
+    catch(e){
+      const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    const b=document.getElementById("v-share"); b.textContent="Copied — paste it in chat";
+    setTimeout(()=>{ const x=document.getElementById("v-share"); if(x) x.textContent="Share my card"; },1800);
+  };
+}
+
+function vBoot(){
+  try{ V.cfg = JSON.parse(localStorage.getItem(LS.cfg)); }catch(e){}
+  vLoadScores();
+  vRender();
+  vFetch();
+  V.pollT = setInterval(()=>{ if (document.visibilityState==="visible") vFetch(); }, 20000);
+  document.addEventListener("visibilitychange", ()=>{ if (document.visibilityState==="visible") vFetch(); });
+}
+
+/* ═══════════════ SYNC (overlay/control) ═══════════════ */
+let room = (P.get("room") || localStorage.getItem(LS.room) || "").trim();
+if (room) localStorage.setItem(LS.room, room);
+let bc=null; try{ bc = new BroadcastChannel("jack-gauntlet"); }catch(e){}
+let ws=null, wsTimer=null, netEl=null, netLabel=null;
+function topic(){ return "jackgauntlet_" + room.replace(/[^A-Za-z0-9_-]/g,""); }
+function setNet(kind,text){ if(!netEl) return; netEl.className="dot "+kind; netLabel.textContent=text; }
+function connectRoom(onState){
+  clearTimeout(wsTimer);
+  try{ if(ws){ ws.onclose=null; ws.close(); } }catch(e){}
+  ws=null;
+  if(!room){ setNet("","local only"); return; }
+  setNet("wait","connecting");
+  try{ ws = new WebSocket("wss://ntfy.sh/"+topic()+"/ws?since=12h"); }catch(e){ setNet("err","failed"); return; }
+  ws.onopen = ()=> setNet("live","room "+room);
+  ws.onerror = ()=>{ try{ws.close();}catch(e){} };
+  ws.onclose = ()=>{ setNet("err","reconnecting"); wsTimer=setTimeout(()=>connectRoom(onState),3000); };
+  ws.onmessage = (ev)=>{
+    let env,st;
+    try{ env=JSON.parse(ev.data); }catch(e){ return; }
+    if(env.event!=="message"||!env.message) return;
+    try{ st=JSON.parse(env.message); }catch(e){ return; }
+    if(!st||st.by===CLIENT) return;
+    onState(st);
+  };
+}
+let pushTimer=null,pushPending=null;
+function pushRoom(st){
+  if(!room) return;
+  pushPending=st;
+  if(pushTimer) return;
+  pushTimer=setTimeout(()=>{
+    pushTimer=null;
+    const body=JSON.stringify(pushPending); pushPending=null;
+    fetch("https://ntfy.sh/"+topic(),{method:"POST",body}).catch(()=>{});
+  },160);
+}
+
+/* ═══════════════ OVERLAY ═══════════════ */
+const O = { st:null, zoomHold:false, zoomT:null, lastScoresSig:null };
+
+function oDefault(){
+  return { games:[], course:"", total:0, thru:0, visible:true,
+           pos:{x:15,y:50}, mini:0.42, big:false, autoZoom:true, ts:0, by:"" };
+}
+function oApplyLayout(board){
+  const vw=innerWidth, vh=innerHeight, st=O.st;
+  const w=board.offsetWidth, h=board.offsetHeight;
+  if(st.big || O.zoomHold){
+    const s=Math.min((vw-70)/w,(vh-70)/h);
+    board.style.left="50%"; board.style.top="50%";
+    board.style.transform="translate(-50%,-50%) scale("+s+")";
+  }else{
+    const s=st.mini;
+    const hx=(w*s/2)/vw*100, hy=(h*s/2)/vh*100;
+    const x=Math.min(Math.max(st.pos.x,hx),100-hx);
+    const y=Math.min(Math.max(st.pos.y,hy),100-hy);
+    board.style.left=x+"%"; board.style.top=y+"%";
+    board.style.transform="translate(-50%,-50%) scale("+s+")";
+  }
+  board.classList.toggle("hidden", st.visible===false);
+}
+function oTriggerZoom(ms){
+  O.zoomHold=true; clearTimeout(O.zoomT);
+  O.zoomT=setTimeout(()=>{ O.zoomHold=false; const b=document.getElementById("board"); if(b) oApplyLayout(b); },ms);
+}
+function oRender(){
+  const app=document.getElementById("app");
+  const st=O.st;
+  let rows="";
+  st.games.forEach((g,i)=>{
+    const has = g.tp!==null && g.tp!==undefined;
+    rows += '<div class="orow">'+
+      '<span class="n">'+(i+1)+'</span>'+
+      '<span class="g">'+esc(g.name)+'</span>'+
+      '<span class="p">'+esc(g.parTxt||"")+'</span>'+
+      '<span class="s'+(g.score===null||g.score===undefined?" dot":"")+'">'+(g.score===null||g.score===undefined?"·":esc(String(g.score)))+'</span>'+
+      (has ? '<span class="chip '+parClass(g.tp)+'">'+fmtPar(g.tp)+'</span>' : '<span class="chip" style="opacity:.35">–</span>')+
+    '</div>';
+  });
+  app.innerHTML =
+    '<div class="board" id="board"><div class="tab">jack bing</div>'+
+      '<div class="card ocard">'+
+        '<div class="ohead"><span class="t">daily game gauntlet</span>'+
+          '<span class="d">'+esc(st.course||"")+'</span></div>'+
+        rows+
+        '<div class="ofoot"><span class="lbl">to par</span><span class="thru">thru '+st.thru+'</span>'+
+          '<span class="tot '+parClass(st.total)+'">'+(st.thru?fmtPar(st.total):"–")+'</span></div>'+
+      '</div></div>';
+  oWireDrag();
+  oApplyLayout(document.getElementById("board"));
+}
+function oWireDrag(){
+  const board=document.getElementById("board");
+  let dragging=false, off=null;
+  board.addEventListener("pointerdown",(e)=>{
+    if(O.st.big||O.zoomHold) return;
+    dragging=true;
+    off={x:e.clientX/innerWidth*100-O.st.pos.x, y:e.clientY/innerHeight*100-O.st.pos.y};
+    board.classList.add("noanim"); board.setPointerCapture(e.pointerId);
+  });
+  board.addEventListener("pointermove",(e)=>{
+    if(!dragging) return;
+    O.st.pos={x:e.clientX/innerWidth*100-off.x, y:e.clientY/innerHeight*100-off.y};
+    oApplyLayout(board);
+    O.st.ts=Date.now(); O.st.by=CLIENT;
+    localStorage.setItem(LS.ov, JSON.stringify(O.st));
+    if(bc) bc.postMessage(O.st);
+    pushRoom(O.st);
+  });
+  const end=()=>{ dragging=false; board.classList.remove("noanim"); };
+  board.addEventListener("pointerup",end);
+  board.addEventListener("pointercancel",end);
+}
+function oOnState(st){
+  if(!st || !Array.isArray(st.games)) return;
+  if(O.st && O.st.ts && st.ts && st.ts < O.st.ts) return;
+  const sig = JSON.stringify(st.games.map(g=>g.score));
+  const changed = O.lastScoresSig !== null && sig !== O.lastScoresSig;
+  O.lastScoresSig = sig;
+  O.st = Object.assign(oDefault(), st);
+  localStorage.setItem(LS.ov, JSON.stringify(O.st));
+  oRender();
+  if (changed && O.st.autoZoom && !O.st.big) oTriggerZoom(2600);
+}
+function oBoot(){
+  try{ O.st = Object.assign(oDefault(), JSON.parse(localStorage.getItem(LS.ov)) || {}); }
+  catch(e){ O.st = oDefault(); }
+  oRender();
+  if(bc) bc.onmessage=(e)=>oOnState(e.data);
+  window.addEventListener("storage",(e)=>{
+    if(e.key!==LS.ov||!e.newValue) return;
+    try{ const st=JSON.parse(e.newValue); if(st.by!==CLIENT) oOnState(st); }catch(err){}
+  });
+  connectRoom(oOnState);
+  addEventListener("resize",()=>{ const b=document.getElementById("board"); if(b) oApplyLayout(b); });
+}
+
+/* ═══════════════ CONTROL ═══════════════ */
+const C = {
+  cfg:null, courseId:null, day:today(),
+  scores:{}, name: localStorage.getItem(LS.ctlname) || "Jack",
+  admin: localStorage.getItem(LS.admin) || "",
+  ov:null, subT:null, edCourse:null, status:""
+};
+function cScoresKey(){ return "gg_ctl_scores_" + C.day; }
+function cLoad(){
+  try{ C.scores = JSON.parse(localStorage.getItem(cScoresKey())) || {}; }catch(e){ C.scores={}; }
+  try{ C.cfg = JSON.parse(localStorage.getItem(LS.cfg)); }catch(e){}
+  try{ C.ov = Object.assign(oDefault(), JSON.parse(localStorage.getItem(LS.ov)) || {}); }
+  catch(e){ C.ov = oDefault(); }
+}
+function cCourse(){
+  if(!C.cfg) return null;
+  return C.cfg.courses.find(c=>c.id===(C.courseId||C.cfg.activeCourse)) || C.cfg.courses[0];
+}
+function cState(){
+  const course = cCourse();
+  const t = roundTotals(course, C.scores);
+  return Object.assign({}, C.ov, {
+    course: course.name,
+    games: course.games.map((g,i)=>{
+      const v = C.scores[g.id];
+      const has = v!==undefined && v!==null && v!=="";
+      return { name:g.name, parTxt:(g.mode==="direct"?"±":"par "+g.par), score: has? v : null, tp: toPar(g,v) };
+    }),
+    total:t.total, thru:t.thru, ts:Date.now(), by:CLIENT
+  });
+}
+function cPublish(){
+  const st = cState();
+  C.ov.ts = st.ts;
+  localStorage.setItem(LS.ov, JSON.stringify(st));
+  if(bc) bc.postMessage(st);
+  pushRoom(st);
+}
+function cQueueLeaderboard(){
+  clearTimeout(C.subT);
+  C.subT = setTimeout(async ()=>{
+    if(!C.admin) return;
+    try{
+      await api("gauntlet_submit_admin",{ p_key:C.admin, p_day:C.day, p_token:TOKEN_ADMIN, p_name:C.name||"Jack", p_scores:C.scores });
+      C.status="on the leaderboard ✓";
+    }catch(e){ C.status="leaderboard submit failed — check admin key"; }
+    const el=document.getElementById("c-status"); if(el) el.textContent=C.status;
+  }, 800);
+}
+async function cFetchCfg(){
+  try{
+    const out = await api("gauntlet_get",{ p_day: C.day });
+    if(out.config){ C.cfg = out.config; localStorage.setItem(LS.cfg, JSON.stringify(C.cfg)); }
+  }catch(e){}
+  if(!C.cfg) C.cfg = { activeCourse:"gauntlet", courses:[{id:"gauntlet",name:"the gauntlet",games:[]}] };
+  cRender();
+  cPublish();
+}
+async function cSaveCfg(){
+  localStorage.setItem(LS.cfg, JSON.stringify(C.cfg));
+  if(!C.admin){ C.status="saved locally — add admin key to publish for viewers"; cRender(); return; }
+  try{
+    await api("gauntlet_save_config",{ p_key:C.admin, p_data:C.cfg });
+    C.status="published to viewers ✓";
+  }catch(e){ C.status="publish failed — check admin key"; }
+  cRender();
+}
+
+function cRender(){
+  const app=document.getElementById("app");
+  const course=cCourse();
+  if(!course){ app.innerHTML='<div class="hint">loading…</div>'; return; }
+  const t=roundTotals(course, C.scores);
+  const ed = C.cfg.courses.find(c=>c.id===C.edCourse) || course;
+
+  let holes="";
+  course.games.forEach((g,i)=>{
+    const v=C.scores[g.id];
+    const has=v!==undefined&&v!==null&&v!=="";
+    const tp=toPar(g,v);
+    holes += '<div class="crow">'+
+      '<span class="num" style="width:16px;font-size:11px;font-weight:700;color:var(--dim);text-align:center">'+(i+1)+'</span>'+
+      '<span class="nm">'+esc(g.name)+'</span>'+
+      '<span class="par">'+(g.mode==="direct"?"±":"par "+g.par)+'</span>'+
+      '<span class="step">'+
+        '<button data-m="-1" data-g="'+esc(g.id)+'">−</button>'+
+        '<input type="number" inputmode="numeric" data-g="'+esc(g.id)+'" value="'+(has?v:"")+'" placeholder="–">'+
+        '<button data-m="1" data-g="'+esc(g.id)+'">+</button>'+
+      '</span>'+
+      (tp!==null?'<span class="chip '+parClass(tp)+'" style="width:56px;text-align:center">'+fmtPar(tp)+'</span>'
+                :'<span class="chip" style="width:56px;text-align:center;opacity:.35">–</span>')+
+    '</div>';
+  });
+
+  let gedRows="";
+  ed.games.forEach((g,i)=>{
+    gedRows += '<div class="ged" data-gi="'+i+'">'+
+      '<div class="row">'+
+        '<input class="g-name" data-f="name" data-gi="'+i+'" value="'+esc(g.name)+'" placeholder="game name">'+
+        '<input class="g-par" data-f="par" data-gi="'+i+'" type="number" value="'+g.par+'" title="par">'+
+        '<input class="g-per" data-f="per" data-gi="'+i+'" type="number" value="'+(g.per||1)+'" title="units per stroke">'+
+        '<select class="g-sel" data-f="better" data-gi="'+i+'" title="which direction is better">'+
+          '<option value="low"'+(g.better!=="high"?" selected":"")+'>low wins</option>'+
+          '<option value="high"'+(g.better==="high"?" selected":"")+'>high wins</option></select>'+
+        '<select class="g-sel" data-f="mode" data-gi="'+i+'" title="scoring mode">'+
+          '<option value="normal"'+(g.mode!=="direct"?" selected":"")+'>vs par</option>'+
+          '<option value="direct"'+(g.mode==="direct"?" selected":"")+'>± direct</option></select>'+
+      '</div>'+
+      '<div class="row"><input class="g-rules" data-f="rules" data-gi="'+i+'" value="'+esc(g.rules||"")+'" placeholder="rules shown behind the (i)"></div>'+
+      '<div class="row"><input class="g-link" data-f="link" data-gi="'+i+'" value="'+esc(g.link||"")+'" placeholder="https:// link to the game"></div>'+
+      '<div class="row">'+
+        '<button class="mini-b" data-up="'+i+'">↑</button>'+
+        '<button class="mini-b" data-dn="'+i+'">↓</button>'+
+        '<button class="mini-b warn" data-rm="'+i+'">remove</button>'+
+      '</div>'+
+    '</div>';
+  });
+
+  app.innerHTML =
+  '<div class="wrap">'+
+    '<div class="col-a">'+
+      '<div class="bar"><div class="tab">gauntlet control</div>'+
+        '<div class="who">'+dayLabel(C.day)+' · '+esc(course.name)+'</div>'+
+        '<div class="net"><span class="dot" id="netdot"></span><span id="netlbl">local only</span></div></div>'+
+
+      '<div class="panel"><h2>my round</h2>'+holes+
+        '<div class="ctot">'+
+          '<button id="b-big2"'+(C.ov.big?' class="on"':"")+'>'+(C.ov.big?"Back to corner":"Enlarge (centre)")+'</button>'+
+          '<button id="b-clear">Clear round</button>'+
+          '<button id="b-vis">'+(C.ov.visible===false?"Show overlay":"Hide overlay")+'</button>'+
+          '<span class="tot '+parClass(t.total)+'">'+(t.thru?fmtPar(t.total):"–")+'</span>'+
+        '</div>'+
+        '<div class="hint" id="c-status">'+esc(C.status||(C.admin?"scores go to the stream + leaderboard as you type":"add your admin key (right) to appear on the viewer leaderboard"))+'</div>'+
+      '</div>'+
+
+      '<div class="panel"><h2>position on stream</h2>'+
+        '<div class="stage16" id="stage"><div class="ghost" id="ghost">jb</div></div>'+
+        '<label>Size on stream</label>'+
+        '<input type="range" id="r-mini" min="0.25" max="0.8" step="0.01" value="'+C.ov.mini+'">'+
+        '<div class="row" style="margin-top:10px">'+
+          '<label style="margin:0;display:flex;align-items:center;gap:7px;text-transform:none;letter-spacing:0;font-size:12px;cursor:pointer">'+
+          '<input type="checkbox" id="c-zoom"'+(C.ov.autoZoom?" checked":"")+'> pop to centre on a new score</label></div>'+
+        '<div class="hint">OBS browser source → <b>https://jackbing.com/gauntlet/?overlay&room='+esc(room||"YOURCODE")+'</b> at 1920×1080.</div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="col-b">'+
+      '<div class="panel"><h2>setup</h2>'+
+        '<label>Room code (for the OBS overlay)</label>'+
+        '<div class="row"><input class="mono" id="i-room" value="'+esc(room)+'" placeholder="e.g. jack-golf1" style="flex:1 1 140px">'+
+          '<button id="b-room">Connect</button></div>'+
+        '<label>My name on the leaderboard</label>'+
+        '<input id="i-name" maxlength="24" value="'+esc(C.name)+'">'+
+        '<label>Admin key</label>'+
+        '<input class="mono" id="i-admin" type="password" value="'+esc(C.admin)+'" placeholder="gg-…">'+
+        '<label>Course for my round</label>'+
+        '<select id="s-course">'+C.cfg.courses.map(c=>'<option value="'+esc(c.id)+'"'+(c.id===course.id?" selected":"")+'>'+esc(c.name)+'</option>').join("")+'</select>'+
+        '<div class="row" style="margin-top:10px">'+
+          '<button id="b-active"'+(C.cfg.activeCourse===course.id?' class="on"':'')+'>'+(C.cfg.activeCourse===course.id?"Live for viewers ✓":"Make this today’s course")+'</button>'+
+          '<button id="b-viewer">Open viewer page</button></div>'+
+        '<label>Remove a player (day · name)</label>'+
+        '<div class="row"><input id="i-kick" placeholder="name to remove" style="flex:1 1 120px"><button class="warn" id="b-kick">Remove</button></div>'+
+      '</div>'+
+
+      '<div class="panel"><h2>course editor</h2>'+
+        '<select id="s-edit">'+C.cfg.courses.map(c=>'<option value="'+esc(c.id)+'"'+(c.id===ed.id?" selected":"")+'>'+esc(c.name)+'</option>').join("")+'</select>'+
+        '<label>Course name</label><input id="i-cname" value="'+esc(ed.name)+'">'+
+        '<div style="margin-top:12px">'+gedRows+'</div>'+
+        '<div class="row">'+
+          '<button id="b-addg">Add game</button>'+
+          '<button class="pri" id="b-savec">Save + publish course</button>'+
+        '</div>'+
+        '<div class="row" style="margin-top:8px">'+
+          '<button id="b-newc">New course</button>'+
+          '<button class="warn" id="b-delc">Delete course</button>'+
+        '</div>'+
+        '<div class="hint">Publishing updates the viewer page instantly — edit games any time. <b>par</b> = target. <b>per</b> = units per stroke (Globle 2, GeoGuessr 2000). <b>high wins</b> for points games. <b>± direct</b> = the entered number IS the strokes (win/loss games).</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+
+  netEl=document.getElementById("netdot"); netLabel=document.getElementById("netlbl");
+  setNet(room?(ws&&ws.readyState===1?"live":"wait"):"", room?(ws&&ws.readyState===1?"room "+room:"connecting"):"no room set");
+  cLayoutGhost();
+  cWire(course, ed);
+}
+
+const GHOST_W=500, GHOST_H=560;
+function cLayoutGhost(){
+  const stage=document.getElementById("stage"), ghost=document.getElementById("ghost");
+  if(!stage||!ghost) return;
+  const sw=stage.clientWidth, sh=stage.clientHeight;
+  const gw=GHOST_W*C.ov.mini/1920*sw, gh=GHOST_H*C.ov.mini/1080*sh;
+  ghost.style.width=gw+"px"; ghost.style.height=gh+"px";
+  ghost.style.fontSize=Math.max(6,gw*.16)+"px";
+  ghost.classList.toggle("big", !!C.ov.big);
+  if(C.ov.big){ ghost.style.left="50%"; ghost.style.top="50%"; }
+  else{
+    const hx=gw/2/sw*100, hy=gh/2/sh*100;
+    ghost.style.left=Math.min(Math.max(C.ov.pos.x,hx),100-hx)+"%";
+    ghost.style.top=Math.min(Math.max(C.ov.pos.y,hy),100-hy)+"%";
+  }
+}
+
+function cSet(gid, val){
+  if(val===""||val===null||isNaN(val)) delete C.scores[gid];
+  else C.scores[gid]=+val;
+  localStorage.setItem(cScoresKey(), JSON.stringify(C.scores));
+  cPublish();
+  cQueueLeaderboard();
+  cRender();
+}
+
+function cWire(course, ed){
+  const $=id=>document.getElementById(id);
+
+  document.querySelectorAll(".crow .step button").forEach(b=>{
+    b.onclick=()=>{
+      const gid=b.dataset.g, m=+b.dataset.m;
+      const g=course.games.find(x=>x.id===gid);
+      const cur=C.scores[gid];
+      let step=1;
+      if(g.mode!=="direct" && +g.per>=100) step=Math.max(100,Math.round(+g.per/4));
+      let nv;
+      if(cur===undefined) nv = g.mode==="direct" ? m : +g.par;
+      else nv=+cur+m*step;
+      if(g.mode!=="direct"&&nv<0) nv=0;
+      cSet(gid,nv);
+    };
+  });
+  document.querySelectorAll(".crow .step input").forEach(inp=>{
+    inp.onchange=()=> cSet(inp.dataset.g, inp.value===""?"":+inp.value);
+  });
+
+  $("b-clear").onclick=()=>{ C.scores={}; localStorage.setItem(cScoresKey(),"{}"); cPublish(); cQueueLeaderboard(); cRender(); };
+  $("b-big2").onclick=()=>{ C.ov.big=!C.ov.big; cPublish(); cRender(); };
+  $("b-vis").onclick=()=>{ C.ov.visible=C.ov.visible===false; cPublish(); cRender(); };
+
+  const stage=$("stage");
+  let sdrag=false;
+  const sp=(e)=>{ const r=stage.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*100, y:(e.clientY-r.top)/r.height*100}; };
+  stage.addEventListener("pointerdown",(e)=>{ if(C.ov.big) return; sdrag=true; stage.setPointerCapture(e.pointerId); C.ov.pos=sp(e); cLayoutGhost(); cPublish(); });
+  stage.addEventListener("pointermove",(e)=>{ if(!sdrag) return; C.ov.pos=sp(e); cLayoutGhost(); cPublish(); });
+  stage.addEventListener("pointerup",()=>sdrag=false);
+  stage.addEventListener("pointercancel",()=>sdrag=false);
+  $("r-mini").oninput=(e)=>{ C.ov.mini=parseFloat(e.target.value); cLayoutGhost(); cPublish(); };
+  $("c-zoom").onchange=(e)=>{ C.ov.autoZoom=e.target.checked; cPublish(); };
+
+  $("b-room").onclick=()=>{ room=$("i-room").value.trim(); localStorage.setItem(LS.room,room); connectRoom(()=>{}); cRender(); if(room) setTimeout(cPublish,900); };
+  $("i-name").onchange=()=>{ C.name=$("i-name").value.trim()||"Jack"; localStorage.setItem(LS.ctlname,C.name); cQueueLeaderboard(); };
+  $("i-admin").onchange=()=>{ C.admin=$("i-admin").value.trim(); localStorage.setItem(LS.admin,C.admin); cQueueLeaderboard(); cRender(); };
+  $("s-course").onchange=(e)=>{ C.courseId=e.target.value; cPublish(); cQueueLeaderboard(); cRender(); };
+  $("b-active").onclick=()=>{ C.cfg.activeCourse=cCourse().id; cSaveCfg(); };
+  $("b-viewer").onclick=()=>window.open(location.pathname, "_blank");
+  $("b-kick").onclick=async ()=>{
+    const nm=$("i-kick").value.trim(); if(!nm) return;
+    if(!C.admin){ alert("Add your admin key first."); return; }
+    try{ const n=await api("gauntlet_admin_delete",{p_key:C.admin,p_day:C.day,p_name:nm}); alert("Removed "+n+" row(s)."); }
+    catch(e){ alert("Failed — check admin key."); }
+  };
+
+  $("s-edit").onchange=(e)=>{ C.edCourse=e.target.value; cRender(); };
+  $("i-cname").onchange=(e)=>{ ed.name=e.target.value.trim()||ed.name; };
+  document.querySelectorAll(".ged [data-f]").forEach(el=>{
+    el.onchange=()=>{
+      const g=ed.games[+el.dataset.gi], f=el.dataset.f;
+      if(f==="par"||f==="per") g[f]=+el.value||(f==="per"?1:0);
+      else g[f]=el.value.trim();
+      if(f==="name" && !g.id) g.id="g-"+Math.random().toString(36).slice(2,8);
+    };
+  });
+  document.querySelectorAll("[data-rm]").forEach(b=>{ b.onclick=()=>{ ed.games.splice(+b.dataset.rm,1); cRender(); }; });
+  document.querySelectorAll("[data-up]").forEach(b=>{ b.onclick=()=>{ const i=+b.dataset.up; if(i>0){ const x=ed.games.splice(i,1)[0]; ed.games.splice(i-1,0,x); cRender(); } }; });
+  document.querySelectorAll("[data-dn]").forEach(b=>{ b.onclick=()=>{ const i=+b.dataset.dn; if(i<ed.games.length-1){ const x=ed.games.splice(i,1)[0]; ed.games.splice(i+1,0,x); cRender(); } }; });
+  $("b-addg").onclick=()=>{
+    ed.games.push({id:"g-"+Math.random().toString(36).slice(2,8),name:"new game",par:4,per:1,better:"low",mode:"normal",rules:"",link:""});
+    cRender();
+  };
+  $("b-savec").onclick=()=>cSaveCfg();
+  $("b-newc").onclick=()=>{
+    const c={id:"c-"+Math.random().toString(36).slice(2,8),name:"new course",games:[]};
+    C.cfg.courses.push(c); C.edCourse=c.id; cRender();
+  };
+  $("b-delc").onclick=()=>{
+    if(C.cfg.courses.length<2){ alert("Keep at least one course."); return; }
+    if(!confirm('Delete "'+ed.name+'"?')) return;
+    C.cfg.courses=C.cfg.courses.filter(c=>c.id!==ed.id);
+    if(C.cfg.activeCourse===ed.id) C.cfg.activeCourse=C.cfg.courses[0].id;
+    C.edCourse=C.cfg.courses[0].id;
+    cSaveCfg();
+  };
+}
+
+function cBoot(){
+  cLoad();
+  cRender();
+  cFetchCfg();
+  connectRoom((st)=>{ /* control is the source of truth; ignore inbound except position from overlay drags */
+    if(st && st.pos && st.by!==CLIENT && st.ts>(C.ov.ts||0)){ C.ov.pos=st.pos; C.ov.ts=st.ts; cLayoutGhost(); }
+  });
+}
+
+/* ─────────────── boot ─────────────── */
+document.body.className = MODE + (PREVIEW && MODE==="overlay" ? " preview" : "");
+if (MODE==="viewer") vBoot();
+else if (MODE==="overlay") oBoot();
+else cBoot();
+</script>
+</body>
+</html>
