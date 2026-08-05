@@ -132,6 +132,29 @@
     letter-spacing:.4px;padding:3px 7px;border-radius:6px;text-transform:lowercase;margin-left:7px;vertical-align:1px}
   .lb-row.first .pos{color:#b8860b}
 
+  .lbtabs{display:flex;gap:6px;margin:-2px 0 12px}
+  .lbtabs button{padding:7px 13px;font-size:11px;letter-spacing:.6px;text-transform:uppercase}
+  .lbnote{font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.4px;margin-top:8px}
+  .htpb{margin-bottom:10px;padding:8px 14px;border-radius:999px;font-size:11.5px}
+  .namewarn{font-size:11px;color:var(--red);font-weight:700;margin-top:6px;text-align:right}
+
+  /* how-to-play modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(16,16,20,.5);backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);z-index:100;display:flex;align-items:flex-start;justify-content:center;
+    padding:26px 16px;overflow-y:auto}
+  .modalwrap{max-width:520px;width:100%;animation:mup .35s cubic-bezier(.2,1.2,.3,1)}
+  @keyframes mup{0%{opacity:0;transform:translateY(18px) scale(.97)}100%{opacity:1;transform:none}}
+  .modal .mx{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;padding:0;font-size:15px;line-height:1}
+  .modal h3{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin:18px 0 8px}
+  .modal h3:first-child{margin-top:0}
+  .modal p{font-size:14px;line-height:1.6;letter-spacing:-.1px}
+  .modal ol{margin:0 0 0 18px;font-size:14px;line-height:1.9}
+  .mrule{display:flex;align-items:baseline;gap:9px;font-size:13.5px;line-height:1.55;padding:5px 0}
+  .mrule .b{flex:0 0 auto;width:7px;height:7px;border-radius:50%;background:var(--gold);position:relative;top:-1px}
+  .mvid{display:inline-block;margin-top:10px;font-weight:700;font-size:13px;color:var(--ink);text-decoration:none;
+    border:1px solid var(--edge);border-radius:999px;padding:8px 16px}
+  .mvid:hover{background:var(--cell)}
+
   .foot{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:4px}
   .foot .chip{font-size:11px;padding:7px 12px}
   .credit{text-align:center;margin-top:22px;font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.3px}
@@ -305,11 +328,22 @@ function roundTotals(course, scores){
 }
 
 /* ═══════════════ VIEWER ═══════════════ */
+const BAD_NAME = /(fuck|shit|sh1t|cunt|nigg|n1gg|faggot|fagot|retard|r3tard|rape|rapist|whore|slut|bitch|b1tch|hitler|nazi|spastic|kys|coon|pedo|paedo)/i;
+
 const V = {
-  cfg:null, board:[], day:today(),
+  cfg:null, board:[], weekRows:[], tab:"today", day:today(),
   name: localStorage.getItem(LS.name) || "",
-  scores:{}, rulesOpen:{}, pollT:null, subT:null, stampT:null, lastErr:""
+  scores:{}, pollT:null, subT:null, lastErr:"", showHtp:false
 };
+
+function weekRange(day){
+  const d = new Date(day + "T12:00:00Z");
+  const dow = d.getUTCDay();               /* 0 = sunday */
+  const s = new Date(d); s.setUTCDate(d.getUTCDate() - ((dow + 6) % 7));  /* back to monday */
+  const e = new Date(s); e.setUTCDate(s.getUTCDate() + 6);                /* through sunday */
+  const f = x => x.toISOString().slice(0,10);
+  return { start:f(s), end:f(e) };
+}
 function vScoresKey(){ return "gg_scores_" + V.day; }
 function vLoadScores(){ try{ V.scores = JSON.parse(localStorage.getItem(vScoresKey())) || {}; }catch(e){ V.scores={}; } }
 function vSaveScores(){ localStorage.setItem(vScoresKey(), JSON.stringify(V.scores)); }
@@ -359,6 +393,10 @@ async function vFetch(){
     V.cfg = out.config || V.cfg;
     if (V.cfg) localStorage.setItem(LS.cfg, JSON.stringify(V.cfg));
     V.board = out.board || [];
+    if (V.tab === "week"){
+      const r = weekRange(V.day);
+      V.weekRows = await api("gauntlet_get_week", { p_start:r.start, p_end:r.end }) || [];
+    }
     V.lastErr = "";
   }catch(e){ V.lastErr = "offline — scores saved on this device"; }
   vRender();
@@ -368,9 +406,11 @@ function vQueueSubmit(){
   V.subT = setTimeout(async ()=>{
     const course = activeCourse(V.cfg);
     if (course) histSave(course);
-    if (!V.name.trim()) return;
+    if (!V.name.trim() || BAD_NAME.test(V.name)) return;
     try{
-      await api("gauntlet_submit", { p_day:V.day, p_token:TOKEN, p_name:V.name.trim(), p_scores:V.scores });
+      const t = course ? roundTotals(course, V.scores) : { total:0, thru:0 };
+      await api("gauntlet_submit", { p_day:V.day, p_token:TOKEN, p_name:V.name.trim(),
+        p_scores:V.scores, p_total:t.total, p_thru:t.thru });
       // optimistic: refresh board soon after
       setTimeout(vFetch, 700);
     }catch(e){ /* keep local */ }
@@ -442,20 +482,53 @@ function vRender(){
 
   let lb = "";
   const myName = V.name.trim();
-  rows.slice(0, 25).forEach((r,i)=>{
+  const lbSource = V.tab === "week" ? V.weekRows : rows;
+  lbSource.slice(0, 25).forEach((r,i)=>{
     const me = myName && r.name === myName && !r.is_jack;
+    const right = V.tab === "week" ? (r.days + (r.days === 1 ? " day" : " days")) : ("thru " + r.thru);
     lb += '<div class="lb-row' + (me ? " me" : "") + (i===0 ? " first" : "") + '">' +
       '<span class="pos">' + (i+1) + '</span>' +
       '<span class="nm">' + esc(r.name) + (r.is_jack ? '<span class="jb">jack bing</span>' : "") + '</span>' +
-      '<span class="thru">thru ' + r.thru + '</span>' +
+      '<span class="thru">' + right + '</span>' +
       '<span class="chip ' + parClass(r.total) + '" style="width:52px;text-align:center">' + fmtPar(r.total) + '</span>' +
     '</div>';
   });
-  if (!rows.length) lb = '<div class="hint">nobody’s posted a score yet today — be first on the tee.</div>';
+  if (!lbSource.length) lb = '<div class="hint">' +
+    (V.tab === "week" ? "no rounds posted this week yet." : "nobody’s posted a score yet today — be first on the tee.") + '</div>';
+  const lbTabs =
+    '<div class="lbtabs">' +
+      '<button id="v-tab-today"' + (V.tab === "today" ? ' class="on"' : "") + '>today</button>' +
+      '<button id="v-tab-week"'  + (V.tab === "week"  ? ' class="on"' : "") + '>this week</button>' +
+    '</div>';
+  const lbNote = V.tab === "week" ? '<div class="lbnote">weekly board resets sunday midnight</div>' : "";
+
+  const nameBad = V.name.trim() && BAD_NAME.test(V.name);
+
+  const htp = !V.showHtp ? "" :
+  '<div class="modal-bg" id="htp-bg"><div class="modalwrap">' +
+    '<div class="tab">how to play</div>' +
+    '<div class="card modal">' +
+      '<button class="mx" id="htp-x">✕</button>' +
+      '<h3>what is the gauntlet?</h3>' +
+      '<p>9 daily web games. one course. golf scoring — every game has a par, under is good, over is bad. lowest round wins the clubhouse.</p>' +
+      (V.cfg && V.cfg.video ? '<a class="mvid" href="' + esc(V.cfg.video) + '" target="_blank" rel="noopener">▶ watch jack explain it</a>' : "") +
+      '<h3>how to play</h3>' +
+      '<ol><li>open each game with the ↗ and play it</li>' +
+      '<li>punch your score in as you go — your card updates live</li>' +
+      '<li>add your name to join the leaderboard</li></ol>' +
+      '<h3>house rules</h3>' +
+      '<div class="mrule"><span class="b"></span>10 minutes max on any one game — still stuck, take your +2 and move on</div>' +
+      '<div class="mrule"><span class="b"></span>every hole caps at +2 (double bogey) — blow-ups are forgiven</div>' +
+      '<div class="mrule"><span class="b"></span>no hints, no retries — first attempt is the one that counts</div>' +
+      '<div class="mrule"><span class="b"></span>one card a day, scores on your honour</div>' +
+      '<div class="row" style="margin-top:16px"><button class="pri" id="htp-go">let’s play</button></div>' +
+    '</div>' +
+  '</div></div>';
 
   app.innerHTML =
   '<div class="vwrap">' +
     '<div class="vhead"><div class="tab">daily game gauntlet</div>' +
+      '<button class="htpb" id="v-htp">how to play</button>' +
       '<div class="meta">' + esc(course.name) + ' · ' + dayLabel(V.day) + '</div></div>' +
 
     '<div class="card bigcard">' +
@@ -463,7 +536,8 @@ function vRender(){
         '<div><div class="score-huge ' + (t.thru ? parClass(t.total) : "empty") + '">' + (t.thru ? fmtPar(t.total) : "E") + '</div>' +
         '<div class="sub">thru ' + t.thru + " of " + course.games.length + '</div></div>' +
         '<div class="who"><label>your name</label>' +
-          '<input id="v-name" maxlength="24" placeholder="add your name" value="' + esc(V.name) + '"></div>' +
+          '<input id="v-name" maxlength="24" placeholder="add your name" value="' + esc(V.name) + '">' +
+          (nameBad ? '<div class="namewarn">pick a nicer name to join the board</div>' : "") + '</div>' +
       '</div>' +
       (posline ? '<div class="posline">' + posline + '</div>' : "") +
     '</div>' +
@@ -471,7 +545,7 @@ function vRender(){
     '<div class="cols">' +
       '<div class="panel">' + '<h2>today’s course — ' + esc(course.name) + '</h2>' + holes + '</div>' +
       '<div class="colR">' +
-        '<div class="panel"><h2>clubhouse leaderboard</h2>' + lb +
+        '<div class="panel"><h2>clubhouse leaderboard</h2>' + lbTabs + lb + lbNote +
           '<div class="row" style="margin-top:12px"><button class="pri" id="v-share">Share my card</button>' +
           '<span class="hint" style="margin:0">' + (V.lastErr ? esc(V.lastErr) : "updates live as everyone plays") + '</span></div></div>' +
         (stats ? '<div class="foot">' +
@@ -483,7 +557,7 @@ function vRender(){
         '<div class="credit">play along with <b>jack bing</b> · new course daily</div>' +
       '</div>' +
     '</div>' +
-  '</div>';
+  '</div>' + htp;
 
   vWire(course);
 }
@@ -499,6 +573,17 @@ function vSet(course, gid, val){
 function vWire(course){
   const nameEl = document.getElementById("v-name");
   nameEl.onchange = ()=>{ V.name = nameEl.value.trim(); localStorage.setItem(LS.name, V.name); vQueueSubmit(); vRender(); };
+
+  const closeHtp = ()=>{ V.showHtp=false; localStorage.setItem("gg_htp_seen","1"); vRender(); };
+  document.getElementById("v-htp").onclick = ()=>{ V.showHtp=true; vRender(); };
+  const bg = document.getElementById("htp-bg");
+  if (bg){
+    bg.onclick = (e)=>{ if (e.target === bg) closeHtp(); };
+    document.getElementById("htp-x").onclick = closeHtp;
+    document.getElementById("htp-go").onclick = closeHtp;
+  }
+  document.getElementById("v-tab-today").onclick = ()=>{ V.tab="today"; vRender(); };
+  document.getElementById("v-tab-week").onclick  = ()=>{ V.tab="week"; vRender(); vFetch(); };
 
   document.querySelectorAll(".step button").forEach(b=>{
     b.onclick = ()=>{
@@ -541,6 +626,7 @@ function vWire(course){
 function vBoot(){
   try{ V.cfg = JSON.parse(localStorage.getItem(LS.cfg)); }catch(e){}
   vLoadScores();
+  if (!localStorage.getItem("gg_htp_seen")) V.showHtp = true;  /* first visit → how-to card */
   vRender();
   vFetch();
   V.pollT = setInterval(()=>{ if (document.visibilityState==="visible") vFetch(); }, 20000);
@@ -730,7 +816,10 @@ function cQueueLeaderboard(){
   C.subT = setTimeout(async ()=>{
     if(!C.admin) return;
     try{
-      await api("gauntlet_submit_admin",{ p_key:C.admin, p_day:C.day, p_token:TOKEN_ADMIN, p_name:C.name||"Jack", p_scores:C.scores });
+      const course = cCourse();
+      const t = course ? roundTotals(course, C.scores) : { total:0, thru:0 };
+      await api("gauntlet_submit_admin",{ p_key:C.admin, p_day:C.day, p_token:TOKEN_ADMIN,
+        p_name:C.name||"Jack", p_scores:C.scores, p_total:t.total, p_thru:t.thru });
       C.status="on the leaderboard ✓";
     }catch(e){ C.status="leaderboard submit failed — check admin key"; }
     const el=document.getElementById("c-status"); if(el) el.textContent=C.status;
@@ -853,6 +942,8 @@ function cRender(){
         '<input id="i-name" maxlength="24" value="'+esc(C.name)+'">'+
         '<label>Admin key</label>'+
         '<input class="mono" id="i-admin" type="password" value="'+esc(C.admin)+'" placeholder="gg-…">'+
+        '<label>How-to video URL (in the viewer how-to card)</label>'+
+        '<input id="i-video" value="'+esc((C.cfg&&C.cfg.video)||"")+'" placeholder="https://youtu.be/…">'+
         '<label>Course for my round</label>'+
         '<select id="s-course">'+C.cfg.courses.map(c=>'<option value="'+esc(c.id)+'"'+(c.id===course.id?" selected":"")+'>'+esc(c.name)+'</option>').join("")+'</select>'+
         '<div class="row" style="margin-top:10px">'+
@@ -955,6 +1046,7 @@ function cWire(course, ed){
   $("b-room").onclick=()=>{ room=$("i-room").value.trim(); localStorage.setItem(LS.room,room); connectRoom(()=>{}); cRender(); if(room) setTimeout(cPublish,900); };
   $("i-name").onchange=()=>{ C.name=$("i-name").value.trim()||"Jack"; localStorage.setItem(LS.ctlname,C.name); cQueueLeaderboard(); };
   $("i-admin").onchange=()=>{ C.admin=$("i-admin").value.trim(); localStorage.setItem(LS.admin,C.admin); cQueueLeaderboard(); cRender(); };
+  $("i-video").onchange=()=>{ C.cfg.video=$("i-video").value.trim(); cSaveCfg(); };
   $("s-course").onchange=(e)=>{ C.courseId=e.target.value; cPublish(); cQueueLeaderboard(); cRender(); };
   $("b-active").onclick=()=>{ C.cfg.activeCourse=cCourse().id; cSaveCfg(); };
   $("b-viewer").onclick=()=>window.open(location.pathname, "_blank");
