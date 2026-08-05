@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>daily game gauntlet — jack bing</title>
-<meta name="description" content="Play the daily game gauntlet along with Jack Bing — 9 daily games, golf scoring, live leaderboard.">
+<title>daily game gauntlet · jack bing</title>
+<meta name="description" content="Play the daily game gauntlet along with Jack Bing. 9 daily games, golf style scoring, live leaderboard.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛳</text></svg>">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -87,28 +87,28 @@
   .bigcard .who input{text-align:right;font-weight:700}
   .posline{font-size:12px;font-weight:600;margin-top:10px;letter-spacing:.2px;color:var(--dim)}
 
-  .panel{background:var(--paper);border:1px solid var(--edge);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
-  .panel h2{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+  .panel{background:var(--paper);border:1px solid var(--edge);border-radius:22px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  .panel h2{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
 
-  .hole{border-bottom:1px solid var(--cell-edge);padding:11px 2px}
+  .hole{border-bottom:1px solid var(--cell-edge);padding:8px 2px}
   .hole:last-child{border-bottom:none}
-  .hole .r1{display:flex;align-items:center;gap:9px}
-  .hole .num{font-size:11px;font-weight:700;color:var(--dim);width:16px;text-align:center}
-  .hole .nm{font-weight:700;font-size:15px;letter-spacing:-.2px}
-  .hole a.go{color:var(--dim);text-decoration:none;font-size:13px;padding:2px 4px}
-  .hole a.go:hover{color:var(--ink)}
-  .hole .par{font-size:10.5px;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase}
-  .hole .ib{margin-left:auto}
-  .hole .rules{font-size:11.5px;color:var(--dim);line-height:1.5;margin:5px 0 0 25px}
-  .hole .r2{display:flex;align-items:center;gap:8px;margin-top:9px;padding-left:25px}
-  .step{display:flex;align-items:center;gap:0;border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:#fff}
-  .step button{border:none;border-radius:0;font-size:17px;width:42px;padding:8px 0;background:var(--cell)}
-  .step input{width:76px;border:none;border-radius:0;text-align:center;font-weight:700;font-size:16px;background:#fff;padding:8px 4px}
+  .hole .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hole .num{font-size:10.5px;font-weight:700;color:var(--dim);width:15px;text-align:center}
+  .hole .nm{font-weight:700;font-size:14.5px;letter-spacing:-.2px;color:var(--ink);text-decoration:none}
+  .hole a.nm:hover{text-decoration:underline}
+  .playb{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink);
+    text-decoration:none;border:1px solid var(--edge);border-radius:999px;padding:4px 10px;line-height:1}
+  .playb:hover{background:var(--cell)}
+  .hole .par{font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--dim);text-transform:uppercase}
+  .hole .entry{display:flex;align-items:center;gap:7px;margin-left:auto}
+  .hole .rules{font-size:11px;color:var(--dim);line-height:1.45;margin:3px 0 0 23px}
+  .step{display:flex;align-items:center;gap:0;border:1px solid var(--edge);border-radius:11px;overflow:hidden;background:#fff}
+  .step button{border:none;border-radius:0;font-size:15px;width:34px;padding:6px 0;background:var(--cell)}
+  .step input{width:56px;border:none;border-radius:0;text-align:center;font-weight:700;font-size:14px;background:#fff;padding:6px 2px}
   .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
-  .hole .clr{font-size:11px;color:var(--dim);background:none;border:none;padding:4px}
-  .hole .res{margin-left:auto}
-  .wl{display:flex;gap:6px}
-  .wl button{padding:9px 18px;font-size:13px}
+  .hole .clr{font-size:13px;color:var(--dim);background:none;border:none;padding:2px 4px;line-height:1}
+  .wl{display:flex;gap:5px}
+  .wl button{padding:7px 14px;font-size:12px}
   .wl button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
 
   /* desktop: centred two-column clubhouse */
@@ -135,7 +135,9 @@
   .lbtabs{display:flex;gap:6px;margin:-2px 0 12px}
   .lbtabs button{padding:7px 13px;font-size:11px;letter-spacing:.6px;text-transform:uppercase}
   .lbnote{font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.4px;margin-top:8px}
-  .htpb{margin-bottom:10px;padding:8px 14px;border-radius:999px;font-size:11.5px}
+  .htpb{margin-bottom:10px;padding:10px 18px;border-radius:999px;font-size:12px;letter-spacing:.4px;
+    background:var(--gold);border-color:var(--gold);color:var(--gold-txt)}
+  .htpb:hover{background:#f0b52e;border-color:#f0b52e}
   .namewarn{font-size:11px;color:var(--red);font-weight:700;margin-top:6px;text-align:right}
 
   /* how-to-play modal */
@@ -398,7 +400,7 @@ async function vFetch(){
       V.weekRows = await api("gauntlet_get_week", { p_start:r.start, p_end:r.end }) || [];
     }
     V.lastErr = "";
-  }catch(e){ V.lastErr = "offline — scores saved on this device"; }
+  }catch(e){ V.lastErr = "offline, scores saved on this device"; }
   vRender();
 }
 function vQueueSubmit(){
@@ -421,7 +423,7 @@ function shareText(course){
   const t = roundTotals(course, V.scores);
   const em = t.per.map(tp => tp===null ? "▫️" : tp<0 ? "🟢" : tp===0 ? "⚪" : tp===1 ? "🟠" : "🔴").join("");
   const who = V.name.trim() ? V.name.trim() + " · " : "";
-  return "⛳ daily game gauntlet — " + dayLabel(V.day) + "\n" +
+  return "⛳ daily game gauntlet · " + dayLabel(V.day) + "\n" +
          course.name + " · " + who + fmtPar(t.total) + " thru " + t.thru + "\n" +
          em + "\njackbing.com/gauntlet";
 }
@@ -463,20 +465,24 @@ function vRender(){
       '</span>';
     }
 
+    const nameHtml = g.link
+      ? '<a class="nm" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + esc(g.name) + '</a>' +
+        '<a class="playb" href="' + esc(g.link) + '" target="_blank" rel="noopener">play</a>'
+      : '<span class="nm">' + esc(g.name) + '</span>';
+
     holes +=
     '<div class="hole" data-g="' + esc(g.id) + '">' +
       '<div class="r1">' +
         '<span class="num">' + (i+1) + '</span>' +
-        '<span class="nm">' + esc(g.name) + '</span>' +
-        (g.link ? '<a class="go" href="' + esc(g.link) + '" target="_blank" rel="noopener">↗</a>' : "") +
-        '<span class="ib"><span class="par">' + parTxt + '</span></span>' +
+        nameHtml +
+        '<span class="par">' + parTxt + '</span>' +
+        '<span class="entry">' +
+          (tp !== null ? '<span class="chip ' + parClass(tp) + '">' + stampName(tp) + '</span>' : "") +
+          (has ? '<button class="clr" data-c="' + esc(g.id) + '" title="clear">✕</button>' : "") +
+          entry +
+        '</span>' +
       '</div>' +
       (g.rules ? '<div class="rules">' + esc(g.rules) + '</div>' : "") +
-      '<div class="r2">' +
-        entry +
-        (has ? '<button class="clr" data-c="' + esc(g.id) + '">clear</button>' : "") +
-        (tp !== null ? '<span class="res chip ' + parClass(tp) + '">' + stampName(tp) + '</span>' : "") +
-      '</div>' +
     '</div>';
   });
 
@@ -494,7 +500,7 @@ function vRender(){
     '</div>';
   });
   if (!lbSource.length) lb = '<div class="hint">' +
-    (V.tab === "week" ? "no rounds posted this week yet." : "nobody’s posted a score yet today — be first on the tee.") + '</div>';
+    (V.tab === "week" ? "no rounds posted this week yet." : "nobody’s posted a score yet today. be first on the tee.") + '</div>';
   const lbTabs =
     '<div class="lbtabs">' +
       '<button id="v-tab-today"' + (V.tab === "today" ? ' class="on"' : "") + '>today</button>' +
@@ -510,16 +516,18 @@ function vRender(){
     '<div class="card modal">' +
       '<button class="mx" id="htp-x">✕</button>' +
       '<h3>what is the gauntlet?</h3>' +
-      '<p>9 daily web games. one course. golf scoring — every game has a par, under is good, over is bad. lowest round wins the clubhouse.</p>' +
+      '<p>9 daily web games. one course. golf style scoring: every game has a par, under is good, over is bad. lowest round wins the clubhouse.</p>' +
       (V.cfg && V.cfg.video ? '<a class="mvid" href="' + esc(V.cfg.video) + '" target="_blank" rel="noopener">▶ watch jack explain it</a>' : "") +
       '<h3>how to play</h3>' +
-      '<ol><li>open each game with the ↗ and play it</li>' +
-      '<li>punch your score in as you go — your card updates live</li>' +
-      '<li>add your name to join the leaderboard</li></ol>' +
+      '<ol><li>hit play on each game and give it a crack</li>' +
+      '<li>punch your score in as you go, your card updates live</li>' +
+      '<li>add your name to join the leaderboard</li>' +
+      '<li>aim for the lowest score. good luck!</li></ol>' +
       '<h3>house rules</h3>' +
-      '<div class="mrule"><span class="b"></span>10 minutes max on any one game — still stuck, take your +2 and move on</div>' +
-      '<div class="mrule"><span class="b"></span>every hole caps at +2 (double bogey) — blow-ups are forgiven</div>' +
-      '<div class="mrule"><span class="b"></span>no hints, no retries — first attempt is the one that counts</div>' +
+      '<div class="mrule"><span class="b"></span>every hole caps at +2 (double bogey). blow-ups are forgiven</div>' +
+      '<div class="mrule"><span class="b"></span>10 minutes max on any one game. still stuck? take your +2 and move on</div>' +
+      '<div class="mrule"><span class="b"></span>no hints. if the game gives hints, you can’t use them (sorry)</div>' +
+      '<div class="mrule"><span class="b"></span>no retries. first attempt is the one that counts</div>' +
       '<div class="mrule"><span class="b"></span>one card a day, scores on your honour</div>' +
       '<div class="row" style="margin-top:16px"><button class="pri" id="htp-go">let’s play</button></div>' +
     '</div>' +
@@ -543,7 +551,7 @@ function vRender(){
     '</div>' +
 
     '<div class="cols">' +
-      '<div class="panel">' + '<h2>today’s course — ' + esc(course.name) + '</h2>' + holes + '</div>' +
+      '<div class="panel">' + '<h2>today’s course · ' + esc(course.name) + '</h2>' + holes + '</div>' +
       '<div class="colR">' +
         '<div class="panel"><h2>clubhouse leaderboard</h2>' + lbTabs + lb + lbNote +
           '<div class="row" style="margin-top:12px"><button class="pri" id="v-share">Share my card</button>' +
@@ -618,7 +626,7 @@ function vWire(course){
       const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta);
       ta.select(); document.execCommand("copy"); ta.remove();
     }
-    const b=document.getElementById("v-share"); b.textContent="Copied — paste it in chat";
+    const b=document.getElementById("v-share"); b.textContent="Copied. paste it in chat";
     setTimeout(()=>{ const x=document.getElementById("v-share"); if(x) x.textContent="Share my card"; },1800);
   };
 }
@@ -821,7 +829,7 @@ function cQueueLeaderboard(){
       await api("gauntlet_submit_admin",{ p_key:C.admin, p_day:C.day, p_token:TOKEN_ADMIN,
         p_name:C.name||"Jack", p_scores:C.scores, p_total:t.total, p_thru:t.thru });
       C.status="on the leaderboard ✓";
-    }catch(e){ C.status="leaderboard submit failed — check admin key"; }
+    }catch(e){ C.status="leaderboard submit failed. check admin key"; }
     const el=document.getElementById("c-status"); if(el) el.textContent=C.status;
   }, 800);
 }
@@ -837,11 +845,11 @@ async function cFetchCfg(){
 async function cSaveCfg(){
   localStorage.setItem(LS.cfg, JSON.stringify(C.cfg));
   cPublish(); /* overlay picks up course edits instantly, same moment as viewers */
-  if(!C.admin){ C.status="saved locally — add admin key to publish for viewers"; cRender(); return; }
+  if(!C.admin){ C.status="saved locally. add admin key to publish for viewers"; cRender(); return; }
   try{
     await api("gauntlet_save_config",{ p_key:C.admin, p_data:C.cfg });
-    C.status="published — overlay + viewer site updated ✓";
-  }catch(e){ C.status="publish failed — check admin key"; }
+    C.status="published: overlay + viewer site updated ✓";
+  }catch(e){ C.status="publish failed. check admin key"; }
   cRender();
 }
 
@@ -1054,7 +1062,7 @@ function cWire(course, ed){
     const nm=$("i-kick").value.trim(); if(!nm) return;
     if(!C.admin){ alert("Add your admin key first."); return; }
     try{ const n=await api("gauntlet_admin_delete",{p_key:C.admin,p_day:C.day,p_name:nm}); alert("Removed "+n+" row(s)."); }
-    catch(e){ alert("Failed — check admin key."); }
+    catch(e){ alert("Failed. check admin key."); }
   };
 
   $("s-edit").onchange=(e)=>{ C.edCourse=e.target.value; cRender(); };
