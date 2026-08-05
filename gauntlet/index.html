@@ -104,8 +104,9 @@
   .hole .rules{font-size:11px;color:var(--dim);line-height:1.45;margin:3px 0 0 23px}
   .step{display:flex;align-items:center;gap:0;border:1px solid var(--edge);border-radius:11px;overflow:hidden;background:#fff}
   .step button{border:none;border-radius:0;font-size:15px;width:34px;padding:6px 0;background:var(--cell)}
-  .step input{width:56px;border:none;border-radius:0;text-align:center;font-weight:700;font-size:14px;background:#fff;padding:6px 2px}
-  .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
+  .step input{width:56px;border:none;border-radius:0;text-align:center;font-weight:700;font-size:14px;background:#fff;padding:6px 2px;
+    appearance:textfield;-moz-appearance:textfield}
+  .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   .hole .clr{font-size:13px;color:var(--dim);background:none;border:none;padding:2px 4px;line-height:1}
   .wl{display:flex;gap:5px}
   .wl button{padding:7px 14px;font-size:12px}
