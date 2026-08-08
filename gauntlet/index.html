@@ -695,7 +695,9 @@ function oApplyLayout(board){
     board.style.left="50%"; board.style.top="50%";
     board.style.transform="translate(-50%,-50%) scale("+s+")";
   }else{
-    const s=st.mini;
+    /* slider goes up to full-screen size; cap so the card always fits on screen */
+    const fit=Math.min((vw-40)/w,(vh-40)/h);
+    const s=Math.min(st.mini, fit);
     const hx=(w*s/2)/vw*100, hy=(h*s/2)/vh*100;
     const x=Math.min(Math.max(st.pos.x,hx),100-hx);
     const y=Math.min(Math.max(st.pos.y,hy),100-hy);
@@ -969,7 +971,7 @@ function cRender(){
       '<div class="panel"><h2>position on stream</h2>'+
         '<div class="stage16" id="stage"><div class="ghost" id="ghost">jb</div></div>'+
         '<label>Size on stream</label>'+
-        '<input type="range" id="r-mini" min="0.25" max="0.8" step="0.01" value="'+C.ov.mini+'">'+
+        '<input type="range" id="r-mini" min="0.15" max="1.9" step="0.01" value="'+C.ov.mini+'">'+
         '<div class="row" style="margin-top:10px">'+
           '<label style="margin:0;display:flex;align-items:center;gap:7px;text-transform:none;letter-spacing:0;font-size:12px;cursor:pointer">'+
           '<input type="checkbox" id="c-zoom"'+(C.ov.autoZoom?" checked":"")+'> pop to centre on a new score</label></div>'+
@@ -1025,7 +1027,8 @@ function cLayoutGhost(){
   const stage=document.getElementById("stage"), ghost=document.getElementById("ghost");
   if(!stage||!ghost) return;
   const sw=stage.clientWidth, sh=stage.clientHeight;
-  const gw=GHOST_W*C.ov.mini/1920*sw, gh=GHOST_H*C.ov.mini/1080*sh;
+  const eff=Math.min(C.ov.mini, Math.min(1880/GHOST_W, 1040/GHOST_H));
+  const gw=GHOST_W*eff/1920*sw, gh=GHOST_H*eff/1080*sh;
   ghost.style.width=gw+"px"; ghost.style.height=gh+"px";
   ghost.style.fontSize=Math.max(6,gw*.16)+"px";
   ghost.classList.toggle("big", !!C.ov.big);
