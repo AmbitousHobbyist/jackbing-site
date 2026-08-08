@@ -711,6 +711,37 @@ function oTriggerZoom(ms){
 function oRender(){
   const app=document.getElementById("app");
   const st=O.st;
+
+  /* patch the existing card in place — rebuilding it every update makes the
+     whole board flash/re-animate on stream */
+  const board=document.getElementById("board");
+  if (board && board.querySelectorAll(".orow").length === st.games.length){
+    const rows=board.querySelectorAll(".orow");
+    st.games.forEach((g,i)=>{
+      const r=rows[i];
+      const empty = g.score===null || g.score===undefined;
+      const has = g.tp!==null && g.tp!==undefined;
+      r.querySelector(".g").textContent = g.name;
+      r.querySelector(".p").textContent = g.parTxt||"";
+      const s=r.querySelector(".s");
+      s.textContent = empty ? "·" : String(g.score);
+      s.classList.toggle("dot", empty);
+      const chip=r.querySelector(".chip");
+      chip.className = "chip" + (has ? " "+parClass(g.tp) : "");
+      chip.style.opacity = has ? "" : ".35";
+      chip.textContent = has ? fmtPar(g.tp) : "–";
+    });
+    board.querySelector(".ohead .d").textContent = st.course||"";
+    board.querySelector(".ofoot .thru").textContent = "thru "+st.thru;
+    const tot=board.querySelector(".ofoot .tot");
+    tot.className = "tot "+parClass(st.total);
+    tot.textContent = st.thru ? fmtPar(st.total) : "–";
+    oApplyLayout(board);
+    return;
+  }
+
+  /* full rebuild only on first paint or when the course structure changes —
+     placed without animation so the fresh card doesn't pop into position */
   let rows="";
   st.games.forEach((g,i)=>{
     const has = g.tp!==null && g.tp!==undefined;
@@ -723,7 +754,7 @@ function oRender(){
     '</div>';
   });
   app.innerHTML =
-    '<div class="board" id="board"><div class="tab">jack bing</div>'+
+    '<div class="board noanim" id="board"><div class="tab">jack bing</div>'+
       '<div class="card ocard">'+
         '<div class="ohead"><span class="t">daily game gauntlet</span>'+
           '<span class="d">'+esc(st.course||"")+'</span></div>'+
@@ -733,6 +764,10 @@ function oRender(){
       '</div></div>';
   oWireDrag();
   oApplyLayout(document.getElementById("board"));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const b=document.getElementById("board");
+    if(b) b.classList.remove("noanim");
+  }));
 }
 function oWireDrag(){
   const board=document.getElementById("board");
