@@ -320,6 +320,43 @@
       background: var(--accent);
     }
 
+    /* ID row: avatar photo + eyebrow + greeting */
+    .hero-id-row {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: var(--space-5);
+    }
+    .hero-photo-avatar {
+      width: 144px;
+      height: 144px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      border: 3px solid var(--bg);
+      flex-shrink: 0;
+    }
+    .hero-photo-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-id-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+    .hero-id-row .hero-eyebrow {
+      margin-bottom: 0;
+    }
+    .hero-id-hi {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
     .hero h1 {
       font-size: var(--text-display);
       font-weight: var(--fw-black);
@@ -328,6 +365,14 @@
       margin-bottom: var(--space-5);
       -webkit-text-stroke: 2px var(--text-primary);
       paint-order: stroke fill;
+    }
+
+    /* Single-line variant of the hero title (with avatar row above) */
+    .hero h1.hero-title-single {
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      line-height: 1;
+      letter-spacing: -0.045em;
+      white-space: nowrap;
     }
 
     .hero h1 .accent { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
@@ -1067,6 +1112,9 @@
 
       .hero { align-items: center; padding-bottom: var(--space-8); }
 
+      .hero-photo-avatar { width: 112px; height: 112px; }
+      .hero-id-row { gap: 1rem; }
+
       .hero-right-col {
         align-items: center;
         text-align: center;
@@ -1133,6 +1181,8 @@
       .now-playing-inner { flex-direction: column; gap: var(--space-3); text-align: center; }
       .tz-bar-inner { flex-direction: column; gap: var(--space-2); text-align: center; }
       .channel-age-inner { gap: var(--space-5); }
+      .hero-photo-avatar { width: 92px; height: 92px; }
+      .hero-id-row { gap: 0.875rem; }
     }
 
     /* ========== FLOATING CARD (reusable container) ========== */
@@ -1643,8 +1693,16 @@
   <section class="hero container">
     <div class="hero-content">
       <div>
-        <div class="hero-eyebrow reveal">Creating / Learning / Entertaining</div>
-        <h1 id="heroTitle">Jack<br>Bing<span class="accent">.</span></h1>
+        <div class="hero-id-row reveal">
+          <div class="hero-photo-avatar">
+            <img src="images/jack-profile.jpg" alt="Jack Bing">
+          </div>
+          <div class="hero-id-meta">
+            <span class="hero-eyebrow">Creating / Learning / Entertaining</span>
+            <span class="hero-id-hi">Hey, I'm Jack.</span>
+          </div>
+        </div>
+        <h1 id="heroTitle" class="hero-title-single">Jack Bing<span class="accent">.</span></h1>
         <p class="hero-tagline reveal reveal-delay-2">
           Content creator, business owner, and professional button-presser. I make videos about the stuff I love and people watch them. Here for a good time
         </p>
